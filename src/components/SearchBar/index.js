@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import API from "../../utils/API.js";
+import cheerio from "cheerio";
 import "./style.sass";
 
 class SearchBar extends Component {
@@ -21,7 +22,9 @@ class SearchBar extends Component {
 
     searchPrices = query => {
         API.findPrices(query).then(response => {
-            console.log(response.data);
+            const $ = cheerio.load(response.data);
+            let prices = $(".GenericStationListItem__price___3GpKP").text();
+            console.log(prices);
         });
     }
 
