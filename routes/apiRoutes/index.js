@@ -25,6 +25,7 @@ router.get("/gasAPI/:id", (req, res) => {
                         const gasType = {};
                         gasType.type = $(element).children("span").text();
                         gasType.price = $(element).children(".GasPriceCollection__priceDisplay___1pnaL").children(".FuelTypePriceDisplay__displayContainer___3vnwR:first-child").children("span").text();
+                        gasType.lastUpdated = $(element).children(".GasPriceCollection__priceDisplay___1pnaL").children(".FuelTypePriceDisplay__displayContainer___3vnwR:first-child").children(".FuelTypePriceDisplay__reportedBy___1yi7m").children("p").text();
                         gasArr.push(gasType);
                     });
                     element.gasType = gasArr;

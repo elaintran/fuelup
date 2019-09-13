@@ -17,6 +17,7 @@ function Results(props) {
                                 <div className="grade">
                                     <p>{fuel.type}</p>
                                     {(fuel.price === "- - -") ? <h5>{fuel.price}</h5> : <h5>{fuel.price}<span className="units">/gal</span></h5>}
+                                    <p className="update-time">{fuel.lastUpdated}</p>
                                 </div>
                             );
                         })}
