@@ -6,7 +6,19 @@ const Map = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
 
-function Mapbox() {
+const checkCoordinates = arr => {
+    if (arr.length !== 0) {
+        return arr.map(coordinates => {
+            return <Marker
+                coordinates={[coordinates.longitude, coordinates.latitude]}
+                anchor="bottom">
+                <i className="fas fa-circle"></i>
+            </Marker>
+        })
+    }
+}
+
+function Mapbox(props) {
     return (
         <div className="map-container">
             <Map
@@ -24,11 +36,7 @@ function Mapbox() {
                     layout={{ "icon-image": "marker-15" }}>
                     <Feature coordinates={[-97.7431, 30.2672]}/>
                 </Layer>
-                <Marker
-                    coordinates={[-97.7431, 30.2672]}
-                    anchor="bottom">
-                    <i className="fas fa-circle"></i>
-                </Marker>
+                {checkCoordinates(props.coordinates)}
             </Map>
         </div>
     );

@@ -10,6 +10,7 @@ class Home extends Component {
     state = {
         query: "",
         results: [],
+        coordinates: [],
         search: false
     }
 
@@ -26,9 +27,25 @@ class Home extends Component {
     searchGas = query => {
         API.findGas(query)
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.setState({ results: response.data });
+                this.convertAddress();
             });
+    }
+
+    convertAddress = () => {
+        const coordinates = this.state.results.map(async address => {
+            return API.forwardGeocode(address.address).then(response => {
+                const coordinatesObj = {
+                    longitude: response.data.features[0].center[0],
+                    latitude: response.data.features[0].center[1]
+                };
+                return coordinatesObj;
+            });
+        });
+        Promise.all(coordinates).then(response => {
+            this.setState({ coordinates: response });
+        });
     }
 
     render() {
@@ -51,7 +68,7 @@ class Home extends Component {
                     )}
                 </SubContainer>
                 <SubContainer width="55%">
-                    <Map />
+                    <Map coordinates={this.state.coordinates} />
                 </SubContainer>
             </FlexContainer>
         );
