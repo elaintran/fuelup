@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import Map from "../components/Map";
+import Map from "../components/Map";
 import Results from "../components/Results";
 import SearchBar from "../components/SearchBar";
 import API from "../utils/API.js";
@@ -44,6 +44,7 @@ class Home extends Component {
                         gasType={results.gasType}
                     />
                 )}
+                <Map />
             </div>
         );
     }

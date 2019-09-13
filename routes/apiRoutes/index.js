@@ -2,7 +2,7 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-router.get("/gasAPI/:id", (req, res) => {
+router.get("/gasbuddy/:id", (req, res) => {
     axios.get(`https://www.gasbuddy.com/home?search=${req.params.id}&fuel=1`)
         .then(response => {
             const $ = cheerio.load(response.data);
@@ -30,14 +30,14 @@ router.get("/gasAPI/:id", (req, res) => {
                     });
                     element.gasType = gasArr;
                     return element;
-                })
+                });
             });
             Promise.all(result).then(response => {
                 res.json(response);
             }).catch(err => {
                 console.log(err);
-            })
+            });
         });
-})
+});
 
 module.exports = router;
