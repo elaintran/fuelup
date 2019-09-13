@@ -5,12 +5,16 @@ function Results(props) {
     return (
         <div className="results-card">
             <div className="result-container">
-                <img className="logo" src={props.logo} alt={props.station} />
                 <div className="result-info">
-                    <h4>{props.station}</h4>
-                    <div className="location">
-                        <i className="fas fa-map-marker-alt"></i><p>{props.address}</p>
+                    <img className="logo" src={props.logo} alt={props.station} />
+                    <div className="gas-info">
+                        <h4>{props.station}</h4>
+                        <div className="location">
+                            <i className="fas fa-map-marker-alt"></i><p>{props.address}</p>
+                        </div>
                     </div>
+                </div>
+                <div className="fuel-info">
                     <div className="grade-container">
                         {props.gasType.map(fuel => {
                             return (

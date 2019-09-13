@@ -10,11 +10,12 @@ function Mapbox() {
     return (
         <div className="map-container">
             <Map
-                style="mapbox://styles/mapbox/streets-v9"
+                style="mapbox://styles/elaintran/ck0ildzjc0a651clmdqxncwk9"
                 containerStyle={{
-                    height: "calc(100vh - 21px)",
+                    height: "calc(100vh - 52px)",
                     width: "100%",
-                    borderRadius: "5px"
+                    borderRadius: "5px",
+                    border: "1px solid #e9e9e9"
                 }}>
                 <Layer
                     type="symbol"
