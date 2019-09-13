@@ -3,7 +3,7 @@ import "./style.sass";
 
 function Results(props) {
     return (
-        <div className="results-card">
+        <div className="results-card" onClick={() => props.click(props.id)}>
             <div className="result-container">
                 <div className="result-info">
                     <img className="logo" src={props.logo} alt={props.station} />

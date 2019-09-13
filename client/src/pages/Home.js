@@ -10,10 +10,11 @@ class Home extends Component {
     state = {
         query: "",
         results: [],
-        coordinates: [{
+        coordinates: [],
+        center: {
             longitude: "-97.7431",
             latitude: "30.2672"
-        }], 
+        },
         search: false
     }
 
@@ -25,6 +26,13 @@ class Home extends Component {
     handleSubmit = event => {
         event.preventDefault();
         this.searchGas(this.state.query);
+    }
+
+    handleCenter = index => {
+        this.setState({ center: {
+            longitude: this.state.coordinates[index].longitude,
+            latitude: this.state.coordinates[index].latitude 
+        }})
     }
 
     searchGas = query => {
@@ -49,7 +57,12 @@ class Home extends Component {
             });
         });
         Promise.all(coordinates).then(response => {
-            this.setState({ coordinates: response });
+            this.setState({
+                coordinates: response,
+                center: response[0]
+            });
+        }).catch(err => {
+            console.log(err);
         });
     }
 
@@ -63,17 +76,20 @@ class Home extends Component {
                     />
                 </SubContainer>
                 <SubContainer width="45%">
-                    {this.state.results.map(results =>
+                    {this.state.results.map((results, index) =>
                         <Results
                             station={results.station}
                             logo={results.logo}
                             address={results.address}
                             gasType={results.gasType}
+                            id={index}
+                            key={index}
+                            click={this.handleCenter}
                         />
                     )}
                 </SubContainer>
                 <SubContainer width="55%">
-                    <Map coordinates={this.state.coordinates} search={this.state.search} />
+                    <Map coordinates={this.state.coordinates} center={this.state.center} search={this.state.search} />
                 </SubContainer>
             </FlexContainer>
         );

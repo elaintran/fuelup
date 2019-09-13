@@ -29,12 +29,12 @@ function Mapbox(props) {
                     borderRadius: "5px",
                     border: "1px solid #e9e9e9"
                 }}
-                center={[props.coordinates[0].longitude, props.coordinates[0].latitude]}>
+                center={[props.center.longitude, props.center.latitude]}>
                 <Layer
                     type="symbol"
                     id="marker"
                     layout={{ "icon-image": "marker-15" }}>
-                    <Feature coordinates={[props.coordinates[0].longitude, props.coordinates[0].latitude]}/>
+                    <Feature coordinates={[props.center.longitude, props.center.latitude]}/>
                 </Layer>
                 {checkCoordinates(props.coordinates, props.search)}
             </Map>
