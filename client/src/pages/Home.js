@@ -36,15 +36,14 @@ class Home extends Component {
                     change={this.handleInput}
                     submit={this.handleSubmit}
                 />
-                {/* {this.state.results.map(results =>
+                {this.state.results.map(results =>
                     <Results
                         station={results.station}
                         logo={results.logo}
                         address={results.address}
                         gasType={results.gasType}
                     />
-                )} */}
-                <Results />
+                )}
             </div>
         );
     }
