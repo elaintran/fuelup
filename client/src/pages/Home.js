@@ -10,7 +10,10 @@ class Home extends Component {
     state = {
         query: "",
         results: [],
-        coordinates: [],
+        coordinates: [{
+            longitude: "-97.7431",
+            latitude: "30.2672"
+        }], 
         search: false
     }
 
@@ -27,8 +30,10 @@ class Home extends Component {
     searchGas = query => {
         API.findGas(query)
             .then(response => {
-                // console.log(response.data);
-                this.setState({ results: response.data });
+                this.setState({
+                    results: response.data,
+                    search: true
+                });
                 this.convertAddress();
             });
     }
@@ -68,7 +73,7 @@ class Home extends Component {
                     )}
                 </SubContainer>
                 <SubContainer width="55%">
-                    <Map coordinates={this.state.coordinates} />
+                    <Map coordinates={this.state.coordinates} search={this.state.search} />
                 </SubContainer>
             </FlexContainer>
         );

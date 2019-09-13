@@ -6,8 +6,8 @@ const Map = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
 
-const checkCoordinates = arr => {
-    if (arr.length !== 0) {
+const checkCoordinates = (arr, search) => {
+    if (search === true) {
         return arr.map(coordinates => {
             return <Marker
                 coordinates={[coordinates.longitude, coordinates.latitude]}
@@ -29,14 +29,14 @@ function Mapbox(props) {
                     borderRadius: "5px",
                     border: "1px solid #e9e9e9"
                 }}
-                center={[-97.7431, 30.2672]}>
+                center={[props.coordinates[0].longitude, props.coordinates[0].latitude]}>
                 <Layer
                     type="symbol"
                     id="marker"
                     layout={{ "icon-image": "marker-15" }}>
-                    <Feature coordinates={[-97.7431, 30.2672]}/>
+                    <Feature coordinates={[props.coordinates[0].longitude, props.coordinates[0].latitude]}/>
                 </Layer>
-                {checkCoordinates(props.coordinates)}
+                {checkCoordinates(props.coordinates, props.search)}
             </Map>
         </div>
     );
