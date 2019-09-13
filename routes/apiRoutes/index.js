@@ -17,7 +17,7 @@ router.get("/gasAPI/:id", (req, res) => {
             });
             return resultArr;
         }).then(response => {
-            const results = response.map(function(element) {
+            const result = response.map(function(element) {
                 return axios.get(element.link).then(response => {
                     const $ = cheerio.load(response.data);
                     const gasArr = [];
@@ -31,8 +31,10 @@ router.get("/gasAPI/:id", (req, res) => {
                     return element;
                 })
             });
-            Promise.all(results).then(response => {
+            Promise.all(result).then(response => {
                 res.json(response);
+            }).catch(err => {
+                console.log(err);
             })
         });
 })
