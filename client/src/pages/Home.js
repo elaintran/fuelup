@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Map from "../components/Map";
 import Results from "../components/Results";
 import SearchBar from "../components/SearchBar";
+import FlexContainer from "../components/FlexContainer";
+import SubContainer from "../components/SubContainer";
 import API from "../utils/API.js";
 
 class Home extends Component {
@@ -31,21 +33,27 @@ class Home extends Component {
 
     render() {
         return (
-            <div>
-                <SearchBar
-                    change={this.handleInput}
-                    submit={this.handleSubmit}
-                />
-                {this.state.results.map(results =>
-                    <Results
-                        station={results.station}
-                        logo={results.logo}
-                        address={results.address}
-                        gasType={results.gasType}
+            <FlexContainer>
+                <SubContainer width="100%">
+                    <SearchBar
+                        change={this.handleInput}
+                        submit={this.handleSubmit}
                     />
-                )}
-                <Map />
-            </div>
+                </SubContainer>
+                <SubContainer width="45%">
+                    {this.state.results.map(results =>
+                        <Results
+                            station={results.station}
+                            logo={results.logo}
+                            address={results.address}
+                            gasType={results.gasType}
+                        />
+                    )}
+                </SubContainer>
+                <SubContainer width="55%">
+                    <Map />
+                </SubContainer>
+            </FlexContainer>
         );
     }
 }

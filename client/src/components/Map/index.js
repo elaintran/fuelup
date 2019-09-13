@@ -6,21 +6,24 @@ const Map = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
 
-function Mapbox(props) {
+function Mapbox() {
     return (
-        <Map
-            style="mapbox://styles/mapbox/streets-v9"
-            containerStyle={{
-                height: "100vh",
-                width: "100%"
-            }}>
-            <Layer
-                type="symbol"
-                id="marker"
-                layout={{ "icon-image": "marker-15" }}>
-                <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
-            </Layer>
-        </Map>
+        <div className="map-container">
+            <Map
+                style="mapbox://styles/mapbox/streets-v9"
+                containerStyle={{
+                    height: "calc(100vh - 21px)",
+                    width: "100%",
+                    borderRadius: "5px"
+                }}>
+                <Layer
+                    type="symbol"
+                    id="marker"
+                    layout={{ "icon-image": "marker-15" }}>
+                    <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
+                </Layer>
+            </Map>
+        </div>
     );
 }
 
