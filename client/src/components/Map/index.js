@@ -1,5 +1,5 @@
 import React from "react";
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
 import "./style.sass";
 
 const Map = ReactMapboxGl({
@@ -12,17 +12,23 @@ function Mapbox() {
             <Map
                 style="mapbox://styles/elaintran/ck0ildzjc0a651clmdqxncwk9"
                 containerStyle={{
-                    height: "calc(100vh - 52px)",
+                    height: "calc(100vh - 54px)",
                     width: "100%",
                     borderRadius: "5px",
                     border: "1px solid #e9e9e9"
-                }}>
+                }}
+                center={[-97.7431, 30.2672]}>
                 <Layer
                     type="symbol"
                     id="marker"
                     layout={{ "icon-image": "marker-15" }}>
-                    <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
+                    <Feature coordinates={[-97.7431, 30.2672]}/>
                 </Layer>
+                <Marker
+                    coordinates={[-97.7431, 30.2672]}
+                    anchor="bottom">
+                    <i className="fas fa-circle"></i>
+                </Marker>
             </Map>
         </div>
     );
