@@ -8,6 +8,7 @@ function Results(props) {
             <p>{props.address}</p>
             <p>{props.price}</p>
             <p>{props.updated}</p>
+            <p>{props.link}</p>
         </div>
     );
 }
