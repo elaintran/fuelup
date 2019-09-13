@@ -17,7 +17,7 @@ router.get("/gasAPI/:id", (req, res) => {
             });
             return resultArr;
         }).then(response => {
-            const result = response.map(function(element) {
+            const result = response.map(async function(element) {
                 return axios.get(element.link).then(response => {
                     const $ = cheerio.load(response.data);
                     const gasArr = [];

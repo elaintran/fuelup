@@ -24,7 +24,7 @@ class Home extends Component {
     searchGas = query => {
         API.findGas(query)
             .then(response => {
-                console.log(response);
+                console.log(response.data);
                 this.setState({ results: response.data });
             });
     }
