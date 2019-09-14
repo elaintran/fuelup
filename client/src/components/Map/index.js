@@ -34,7 +34,8 @@ function Mapbox(props) {
                     borderRadius: "5px",
                     border: "1px solid #e9e9e9"
                 }}
-                center={[props.center.longitude, props.center.latitude]}>
+                center={[props.center.longitude, props.center.latitude]}
+                zoom={[props.zoom]}>
                 <Layer
                     type="symbol"
                     id="marker"

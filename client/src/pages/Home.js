@@ -16,6 +16,7 @@ class Home extends Component {
             latitude: "30.2672"
         },
         prices: [],
+        zoom: 12,
         search: false
     }
 
@@ -33,7 +34,9 @@ class Home extends Component {
         this.setState({ center: {
             longitude: this.state.coordinates[index].longitude,
             latitude: this.state.coordinates[index].latitude 
-        }})
+            },
+            zoom: 13
+        });
     }
 
     searchGas = query => {
@@ -98,7 +101,8 @@ class Home extends Component {
                         coordinates={this.state.coordinates}
                         center={this.state.center}
                         search={this.state.search}
-                        price={this.state.prices} />
+                        price={this.state.prices}
+                        zoom={this.state.zoom} />
                 </SubContainer>
             </FlexContainer>
         );
