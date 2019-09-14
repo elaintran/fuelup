@@ -4,6 +4,7 @@ import Results from "../components/Results";
 import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
+import { Dropdown } from "semantic-ui-react";
 import API from "../utils/API.js";
 
 class Home extends Component {
@@ -82,6 +83,26 @@ class Home extends Component {
                         change={this.handleInput}
                         submit={this.handleSubmit}
                     />
+                </SubContainer>
+                <SubContainer width="100%">
+                    <Dropdown text="Fuel Type">
+                        <Dropdown.Menu>
+                            <Dropdown.Item text="Regular" />
+                            <Dropdown.Item text="Midgrade" />
+                            <Dropdown.Item text="Premium" />
+                            <Dropdown.Item text="Diesel" />
+                            <Dropdown.Item text="UNCL88" />
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown text="Brand">
+                        <Dropdown.Menu>
+                            <Dropdown.Item text="Regular" />
+                            <Dropdown.Item text="Midgrade" />
+                            <Dropdown.Item text="Premium" />
+                            <Dropdown.Item text="Diesel" />
+                            <Dropdown.Item text="UNCL88" />
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </SubContainer>
                 <SubContainer width="45%">
                     {this.state.results.map((results, index) =>
