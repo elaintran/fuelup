@@ -1,7 +1,7 @@
-const GasStation = require("./gasStation.js");
+const Station = require("./station.js");
 const User = require("./user.js");
 
 module.exports = {
-    GasStation: GasStation,
+    Station: Station,
     User: User
 }

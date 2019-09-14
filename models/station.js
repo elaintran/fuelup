@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const gasStationSchema = new Schema({
+const stationSchema = new Schema({
     station: {
         type: String,
         required: true
@@ -24,6 +24,6 @@ const gasStationSchema = new Schema({
     }
 });
 
-const GasStation = mongoose.model("GasStation", gasStationSchema);
+const Station = mongoose.model("Station", stationSchema);
 
-module.exports = GasStation;
+module.exports = Station;
