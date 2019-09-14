@@ -12,12 +12,15 @@ class Home extends Component {
     state = {
         query: "",
         results: [],
+        filterResults: [],
         coordinates: [],
         center: {
             longitude: "-97.7431",
             latitude: "30.2672"
         },
         prices: [],
+        brandPlaceholder: "Brand",
+        fuelPlaceholder: "Fuel Type",
         zoom: 12,
         search: false
     }
@@ -76,13 +79,47 @@ class Home extends Component {
         });
     }
 
+    checkResults = () => {
+        if (this.state.filterResults.length === 0) {
+            return this.state.results.map((results, index) => this.renderResults(results, index));
+        } else {
+            return this.state.filterResults.map((results, index) => this.renderResults(results, index));
+        }
+    }
+
     checkBrand = () => {
         if (this.state.results.length !== 0) {
             const station = this.state.results.map(station => station.station);
             let stationSet = new Set(station);
             stationSet = [...stationSet];
-            return stationSet.map(station => <Dropdown.Item text={station} />);
+            return stationSet.map(station => <Dropdown.Item text={station} onClick={() => this.filterDropdown(station)} />);
         }
+    }
+
+    filterDropdown = item => {
+        const filterStation = this.state.results.filter(station => {
+            if (station.station === item) {
+                return station;
+            }
+        });
+        this.setState({
+            filterResults: filterStation,
+            brandPlaceholder: item
+        });
+    }
+
+    renderResults = (results, index) => {
+        return (
+            <Results
+                station={results.station}
+                logo={results.logo}
+                address={results.address}
+                gasType={results.gasType}
+                id={index}
+                key={index}
+                click={this.handleCenter}
+            />
+        );
     }
 
     render() {
@@ -106,7 +143,7 @@ class Home extends Component {
                                 submit={this.handleSubmit}
                             />
                             <DropdownContainer>
-                                <Dropdown text="Fuel Type">
+                                <Dropdown text={this.state.fuelPlaceholder}>
                                     <Dropdown.Menu>
                                         <Dropdown.Item text="Regular" />
                                         <Dropdown.Item text="Midgrade" />
@@ -115,24 +152,14 @@ class Home extends Component {
                                         <Dropdown.Item text="UNCL88" />
                                     </Dropdown.Menu>
                                 </Dropdown>
-                                <Dropdown text="Brand">
+                                <Dropdown text={this.state.brandPlaceholder}>
                                     <Dropdown.Menu>
                                         {this.checkBrand()}
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </DropdownContainer>
                         </FlexContainer>
-                        {this.state.results.map((results, index) =>
-                            <Results
-                                station={results.station}
-                                logo={results.logo}
-                                address={results.address}
-                                gasType={results.gasType}
-                                id={index}
-                                key={index}
-                                click={this.handleCenter}
-                            />
-                        )}
+                        {this.checkResults()}
                     </SubContainer>
                     <SubContainer width="55%">
                         <Map
