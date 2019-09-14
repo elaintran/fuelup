@@ -4,6 +4,7 @@ import Results from "../components/Results";
 import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
+import DropdownContainer from "../components/DropdownContainer";
 import { Dropdown } from "semantic-ui-react";
 import API from "../utils/API.js";
 
@@ -77,55 +78,72 @@ class Home extends Component {
 
     render() {
         return (
-            <FlexContainer>
-                <SubContainer width="100%">
+            <div>
+                <FlexContainer width="95%">
+                    {/* <SearchBar
+                        change={this.handleInput}
+                        submit={this.handleSubmit}
+                    /> */}
+                    <p>Home</p>
+                    <DropdownContainer>
+                        <Dropdown text="Elain Tran">
+                            <Dropdown.Menu>
+                                <Dropdown.Item text="Sign Out" />
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </DropdownContainer>
+                </FlexContainer>
+                <FlexContainer width="95%">
+                    <SubContainer width="45%">
+                        <FlexContainer>
                     <SearchBar
                         change={this.handleInput}
                         submit={this.handleSubmit}
                     />
-                </SubContainer>
-                <SubContainer width="100%">
-                    <Dropdown text="Fuel Type">
-                        <Dropdown.Menu>
-                            <Dropdown.Item text="Regular" />
-                            <Dropdown.Item text="Midgrade" />
-                            <Dropdown.Item text="Premium" />
-                            <Dropdown.Item text="Diesel" />
-                            <Dropdown.Item text="UNCL88" />
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Dropdown text="Brand">
-                        <Dropdown.Menu>
-                            <Dropdown.Item text="Regular" />
-                            <Dropdown.Item text="Midgrade" />
-                            <Dropdown.Item text="Premium" />
-                            <Dropdown.Item text="Diesel" />
-                            <Dropdown.Item text="UNCL88" />
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </SubContainer>
-                <SubContainer width="45%">
-                    {this.state.results.map((results, index) =>
-                        <Results
-                            station={results.station}
-                            logo={results.logo}
-                            address={results.address}
-                            gasType={results.gasType}
-                            id={index}
-                            key={index}
-                            click={this.handleCenter}
-                        />
-                    )}
-                </SubContainer>
-                <SubContainer width="55%">
-                    <Map
-                        coordinates={this.state.coordinates}
-                        center={this.state.center}
-                        search={this.state.search}
-                        price={this.state.prices}
-                        zoom={this.state.zoom} />
-                </SubContainer>
-            </FlexContainer>
+                    <DropdownContainer>
+                        {/* <Dropdown text="Location" /> */}
+                        <Dropdown text="Fuel Type">
+                            <Dropdown.Menu>
+                                <Dropdown.Item text="Regular" />
+                                <Dropdown.Item text="Midgrade" />
+                                <Dropdown.Item text="Premium" />
+                                <Dropdown.Item text="Diesel" />
+                                <Dropdown.Item text="UNCL88" />
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Dropdown text="Brand">
+                            <Dropdown.Menu>
+                                <Dropdown.Item text="Regular" />
+                                <Dropdown.Item text="Midgrade" />
+                                <Dropdown.Item text="Premium" />
+                                <Dropdown.Item text="Diesel" />
+                                <Dropdown.Item text="UNCL88" />
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        </DropdownContainer>
+                        </FlexContainer>
+                        {this.state.results.map((results, index) =>
+                            <Results
+                                station={results.station}
+                                logo={results.logo}
+                                address={results.address}
+                                gasType={results.gasType}
+                                id={index}
+                                key={index}
+                                click={this.handleCenter}
+                            />
+                        )}
+                    </SubContainer>
+                    <SubContainer width="55%">
+                        <Map
+                            coordinates={this.state.coordinates}
+                            center={this.state.center}
+                            search={this.state.search}
+                            price={this.state.prices}
+                            zoom={this.state.zoom} />
+                    </SubContainer>
+                </FlexContainer>
+            </div>
         );
     }
 }
