@@ -6,7 +6,11 @@ $lightorange: rgba(241, 135, 111, 0.3)
 
 .fa-circle
     font-size: 12px
-    color: $orange
     padding: 10px
     background-color: $lightorange
     border-radius: 50%
+    &:before
+        background: linear-gradient(180deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)
+        border-radius: 50%
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;

@@ -15,6 +15,7 @@ class Home extends Component {
             longitude: "-97.7431",
             latitude: "30.2672"
         },
+        prices: [],
         search: false
     }
 
@@ -38,8 +39,12 @@ class Home extends Component {
     searchGas = query => {
         API.findGas(query)
             .then(response => {
+                const prices = response.data.map(prices => {
+                    return prices.gasType[0].price
+                });
                 this.setState({
                     results: response.data,
+                    prices: prices,
                     search: true
                 });
                 this.convertAddress();
@@ -89,7 +94,11 @@ class Home extends Component {
                     )}
                 </SubContainer>
                 <SubContainer width="55%">
-                    <Map coordinates={this.state.coordinates} center={this.state.center} search={this.state.search} />
+                    <Map
+                        coordinates={this.state.coordinates}
+                        center={this.state.center}
+                        search={this.state.search}
+                        price={this.state.prices} />
                 </SubContainer>
             </FlexContainer>
         );
