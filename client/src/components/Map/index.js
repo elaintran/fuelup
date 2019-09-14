@@ -29,7 +29,7 @@ function Mapbox(props) {
             <Map
                 style="mapbox://styles/elaintran/ck0ildzjc0a651clmdqxncwk9"
                 containerStyle={{
-                    height: "calc(100vh - 54px)",
+                    height: "calc(100vh - 85px)",
                     width: "100%",
                     borderRadius: "5px",
                     border: "1px solid #e9e9e9"

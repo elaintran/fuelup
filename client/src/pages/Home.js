@@ -76,14 +76,19 @@ class Home extends Component {
         });
     }
 
+    checkBrand = () => {
+        if (this.state.results.length !== 0) {
+            const station = this.state.results.map(station => station.station);
+            let stationSet = new Set(station);
+            stationSet = [...stationSet];
+            return stationSet.map(station => <Dropdown.Item text={station} />);
+        }
+    }
+
     render() {
         return (
             <div>
                 <FlexContainer width="95%">
-                    {/* <SearchBar
-                        change={this.handleInput}
-                        submit={this.handleSubmit}
-                    /> */}
                     <p>Home</p>
                     <DropdownContainer>
                         <Dropdown text="Elain Tran">
@@ -96,31 +101,26 @@ class Home extends Component {
                 <FlexContainer width="95%">
                     <SubContainer width="45%">
                         <FlexContainer>
-                    <SearchBar
-                        change={this.handleInput}
-                        submit={this.handleSubmit}
-                    />
-                    <DropdownContainer>
-                        {/* <Dropdown text="Location" /> */}
-                        <Dropdown text="Fuel Type">
-                            <Dropdown.Menu>
-                                <Dropdown.Item text="Regular" />
-                                <Dropdown.Item text="Midgrade" />
-                                <Dropdown.Item text="Premium" />
-                                <Dropdown.Item text="Diesel" />
-                                <Dropdown.Item text="UNCL88" />
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Dropdown text="Brand">
-                            <Dropdown.Menu>
-                                <Dropdown.Item text="Regular" />
-                                <Dropdown.Item text="Midgrade" />
-                                <Dropdown.Item text="Premium" />
-                                <Dropdown.Item text="Diesel" />
-                                <Dropdown.Item text="UNCL88" />
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        </DropdownContainer>
+                            <SearchBar
+                                change={this.handleInput}
+                                submit={this.handleSubmit}
+                            />
+                            <DropdownContainer>
+                                <Dropdown text="Fuel Type">
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item text="Regular" />
+                                        <Dropdown.Item text="Midgrade" />
+                                        <Dropdown.Item text="Premium" />
+                                        <Dropdown.Item text="Diesel" />
+                                        <Dropdown.Item text="UNCL88" />
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                                <Dropdown text="Brand">
+                                    <Dropdown.Menu>
+                                        {this.checkBrand()}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </DropdownContainer>
                         </FlexContainer>
                         {this.state.results.map((results, index) =>
                             <Results
