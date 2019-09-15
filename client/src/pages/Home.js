@@ -25,6 +25,10 @@ class Home extends Component {
         search: false
     }
 
+    componentDidMount() {
+        this.searchGas("78634");
+    }
+
     handleInput = event => {
         let value = event.target.value;
         this.setState({ query: value });
@@ -54,7 +58,8 @@ class Home extends Component {
                 this.setState({
                     results: response.data,
                     prices: prices,
-                    search: true
+                    search: true,
+                    brandPlaceholder: "Brand"
                 });
                 this.convertAddress();
             });
@@ -90,18 +95,26 @@ class Home extends Component {
             const station = this.state.results.map(station => station.station);
             let stationSet = new Set(station);
             stationSet = [...stationSet];
-            return stationSet.map(station => <Dropdown.Item text={station} onClick={() => this.filterDropdown(station)} />);
+            return stationSet.map(station => <Dropdown.Item text={station} onClick={() => this.filterBrand(station)} />);
         }
     }
 
-    filterDropdown = item => {
-        const filterStation = this.state.results.filter(station => {
-            if (station.station === item) {
-                return station;
-            }
-        });
+    filterBrand = item => {
+        let filterStation = [];
+        let prices = this.state.prices;
+        if (item !== "Brand") {
+            filterStation = this.state.results.filter(station => {
+                if (station.station === item) {
+                    return station;
+                }
+            });
+            prices = filterStation.map(prices => {
+                return prices.gasType[0].price;
+            })
+        }
         this.setState({
             filterResults: filterStation,
+            prices: prices,
             brandPlaceholder: item,
             zoom: 12
         }, () => this.convertAddress());
@@ -163,6 +176,7 @@ class Home extends Component {
                                 </Dropdown>
                                 <Dropdown text={this.state.brandPlaceholder}>
                                     <Dropdown.Menu>
+                                        <Dropdown.Item text="Brand" onClick={() => this.filterBrand("Brand")} />
                                         {this.checkBrand()}
                                     </Dropdown.Menu>
                                 </Dropdown>
