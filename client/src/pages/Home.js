@@ -89,10 +89,14 @@ class Home extends Component {
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
             //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
-            this.setState({
-                coordinates: response,
-                center: response[0]
-            });
+            if (response.length !== 0) {
+                this.setState({
+                    coordinates: response,
+                    center: response[0]
+                });
+            } else {
+                this.setState({ coordinates: [] })
+            }
         }).catch(err => {
             console.log(err);
         });
