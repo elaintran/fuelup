@@ -28,7 +28,21 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        this.searchGas("78634");
+        // this.searchGas("78634");
+        this.getGeolocation();
+    }
+
+    getGeolocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.showPosition);
+        } else {
+            this.searchGas("78753");
+        }
+    }
+
+    showPosition = position => {
+        API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
+            .then(response => this.searchGas(response.data.features[2].text));
     }
 
     //Handles city and zipcode search input
@@ -247,7 +261,7 @@ class Home extends Component {
 
     //Calls the Mapbox Forward Geocode API and converts address into longitude and latitude coordinates
     renderLocation = address => {
-        return API.forwardGeocode(address.address).then(response => {
+        return API.geocode(address.address).then(response => {
             const coordinatesObj = {
                 longitude: response.data.features[0].center[0],
                 latitude: response.data.features[0].center[1]
