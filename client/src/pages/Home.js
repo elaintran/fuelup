@@ -88,7 +88,11 @@ class Home extends Component {
         if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
             return this.state.results.map((results, index) => this.renderResults(results, index));
         } else {
-            return this.state.filterResults.map((results, index) => this.renderResults(results, index));
+            if (this.state.filterResults.length !== 0) {
+                return this.state.filterResults.map((results, index) => this.renderResults(results, index));
+            } else {
+                return <p>No results found.</p>
+            }
         }
     }
 
@@ -109,29 +113,15 @@ class Home extends Component {
             filterFuel = this.state.results.filter(station => this.renderFuel(station, fuel));
         } else if (fuel !== "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
             filterFuel = this.state.filterResults.filter(station => this.renderFuel(station, fuel));
+        } else if (fuel === "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+            filterFuel = this.state.results.filter(station => this.renderBrand(station, this.state.brandPlaceholder));
         }
         if (filterFuel.length !== 0) {
             filterPrices = filterFuel.map(prices => {
-                switch(fuel) {
-                    case "Midgrade":
-                        return prices.gasType[1].price;
-                        break;
-                    case "Premium":
-                        return prices.gasType[2].price;
-                        break;
-                    case "Diesel":
-                        return prices.gasType[3].price;
-                        break;
-                    case "UNL88":
-                        return prices.gasType[4].price;
-                        break;
-                    default:
-                        return prices.gasType[0].price;
-                }
+                return this.renderPrice(prices, fuel);
             });
             filter = true;
         }
-        console.log(filterPrices);
         this.setState({
             filterResults: filterFuel,
             filterPrices: filterPrices,
@@ -145,14 +135,21 @@ class Home extends Component {
         let filterStation = [];
         let filterPrices = [];
         let filter = false;
-        if (brand !== "Brand") {
-            filterStation = this.state.results.filter(station => {
-                if (station.station === brand) {
-                    return station;
-                }
-            });
+        if (brand !== "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+            filterStation = this.state.results.filter(station => this.renderBrand(station, brand));
+        } else if (brand !== "Brand" && this.state.fuelPlaceholder !== "Fuel Type") {
+            filterStation = this.state.filterResults.filter(station => this.renderBrand(station, brand));
+        } else if (brand === "Brand" && this.state.fuelPlaceholder !== "Fuel Type") {
+            filterStation = this.state.results.filter(station => this.renderFuel(station, this.state.fuelPlaceholder));
+        }
+        if (filterStation.length !== 0 && this.state.fuelPlaceholder === "Fuel Type") {
             filterPrices = filterStation.map(prices => {
                 return prices.gasType[0].price;
+            });
+            filter = true;
+        } else if (filterStation.length !== 0 && this.state.fuelPlaceholder !== "Fuel Type") {
+            filterPrices = filterStation.map(prices => {
+                return this.renderPrice(prices, this.state.fuelPlaceholder);
             });
             filter = true;
         }
@@ -197,6 +194,31 @@ class Home extends Component {
         });
         if (filterStation.length !== 0) {
             return station;
+        }
+    }
+
+    renderBrand = (station, brand) => {
+        if (station.station === brand) {
+            return station;
+        }
+    }
+
+    renderPrice = (prices, fuel) => {
+        switch(fuel) {
+            case "Midgrade":
+                return prices.gasType[1].price;
+                break;
+            case "Premium":
+                return prices.gasType[2].price;
+                break;
+            case "Diesel":
+                return prices.gasType[3].price;
+                break;
+            case "UNL88":
+                return prices.gasType[4].price;
+                break;
+            default:
+                return prices.gasType[0].price;
         }
     }
 
