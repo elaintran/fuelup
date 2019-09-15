@@ -36,9 +36,10 @@ class Home extends Component {
     }
 
     handleCenter = index => {
-        this.setState({ center: {
-            longitude: this.state.coordinates[index].longitude,
-            latitude: this.state.coordinates[index].latitude 
+        this.setState({
+            center: {
+                longitude: this.state.coordinates[index].longitude,
+                latitude: this.state.coordinates[index].latitude 
             },
             zoom: 13
         });
@@ -60,15 +61,12 @@ class Home extends Component {
     }
 
     convertAddress = () => {
-        const coordinates = this.state.results.map(async address => {
-            return API.forwardGeocode(address.address).then(response => {
-                const coordinatesObj = {
-                    longitude: response.data.features[0].center[0],
-                    latitude: response.data.features[0].center[1]
-                };
-                return coordinatesObj;
-            });
-        });
+        let coordinates;
+        if (this.state.brandPlaceholder === "Brand") {
+            coordinates = this.state.results.map(async address => this.renderLocation(address));
+        } else {
+            coordinates = this.state.filterResults.map(async address => this.renderLocation(address));
+        }
         Promise.all(coordinates).then(response => {
             this.setState({
                 coordinates: response,
@@ -80,7 +78,7 @@ class Home extends Component {
     }
 
     checkResults = () => {
-        if (this.state.filterResults.length === 0) {
+        if (this.state.brandPlaceholder === "Brand") {
             return this.state.results.map((results, index) => this.renderResults(results, index));
         } else {
             return this.state.filterResults.map((results, index) => this.renderResults(results, index));
@@ -104,8 +102,9 @@ class Home extends Component {
         });
         this.setState({
             filterResults: filterStation,
-            brandPlaceholder: item
-        });
+            brandPlaceholder: item,
+            zoom: 12
+        }, () => this.convertAddress());
     }
 
     renderResults = (results, index) => {
@@ -120,6 +119,16 @@ class Home extends Component {
                 click={this.handleCenter}
             />
         );
+    }
+
+    renderLocation = (address) => {
+        return API.forwardGeocode(address.address).then(response => {
+            const coordinatesObj = {
+                longitude: response.data.features[0].center[0],
+                latitude: response.data.features[0].center[1]
+            };
+            return coordinatesObj;
+        });
     }
 
     render() {
