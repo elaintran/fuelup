@@ -63,7 +63,7 @@ class Home extends Component {
 
     //Adjust map zoom according to gas station clicked and zooms into selected point
     handleCenter = index => {
-        API.directions(this.state.currentCoordinates, `${this.state.coordinates[index].longitude},${this.state.coordinates[index].latitude}`).then(response => console.log(response));
+        // API.directions(this.state.currentCoordinates, `${this.state.coordinates[index].longitude},${this.state.coordinates[index].latitude}`).then(response => console.log(response));
         this.setState({
             center: {
                 longitude: this.state.coordinates[index].longitude,
