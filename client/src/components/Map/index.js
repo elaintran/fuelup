@@ -7,7 +7,7 @@ const Map = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
 
-const checkCoordinates = (arr, search, price) => {
+const checkCoordinates = (arr, search, price, filterPrice, filter) => {
     if (search === true) {
         return arr.map((coordinates, index) => {
             return (
@@ -15,7 +15,7 @@ const checkCoordinates = (arr, search, price) => {
                     coordinates={[coordinates.longitude, coordinates.latitude]}
                     anchor="bottom"
                     style={{textAlign: "center"}}>
-                    <PriceMarker price={price[index]} />
+                    {(filter === false) ? <PriceMarker price={price[index]} /> : <PriceMarker price={filterPrice[index]} />}
                     <i className="fas fa-circle"></i>
                 </Marker>
             );
@@ -42,7 +42,7 @@ function Mapbox(props) {
                     layout={{ "icon-image": "marker-15" }}>
                     <Feature coordinates={[props.center.longitude, props.center.latitude]}/>
                 </Layer>
-                {checkCoordinates(props.coordinates, props.search, props.price)}
+                {checkCoordinates(props.coordinates, props.search, props.price, props.filterPrice, props.filter)}
             </Map>
         </div>
     );

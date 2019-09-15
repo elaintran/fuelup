@@ -19,10 +19,12 @@ class Home extends Component {
             latitude: "30.2672"
         },
         prices: [],
+        filterPrices: [],
         brandPlaceholder: "Brand",
         fuelPlaceholder: "Fuel Type",
         zoom: 12,
-        search: false
+        search: false,
+        filter: false
     }
 
     componentDidMount() {
@@ -101,22 +103,25 @@ class Home extends Component {
 
     filterBrand = item => {
         let filterStation = [];
-        let prices = this.state.prices;
+        let filterPrices = [];
+        let filter = false;
         if (item !== "Brand") {
             filterStation = this.state.results.filter(station => {
                 if (station.station === item) {
                     return station;
                 }
             });
-            prices = filterStation.map(prices => {
+            filterPrices = filterStation.map(prices => {
                 return prices.gasType[0].price;
-            })
+            });
+            filter = true;
         }
         this.setState({
             filterResults: filterStation,
-            prices: prices,
+            filterPrices: filterPrices,
             brandPlaceholder: item,
-            zoom: 12
+            zoom: 12,
+            filter: filter
         }, () => this.convertAddress());
     }
 
@@ -190,7 +195,9 @@ class Home extends Component {
                             center={this.state.center}
                             search={this.state.search}
                             price={this.state.prices}
-                            zoom={this.state.zoom} />
+                            filterPrice={this.state.filterPrices}
+                            zoom={this.state.zoom}
+                            filter={this.state.filter} />
                     </SubContainer>
                 </FlexContainer>
             </div>
