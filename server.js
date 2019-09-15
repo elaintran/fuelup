@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // connect to mongo database
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fuelup");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fuelupdb");
 
 //uses the route information on "routes/index.js"
 app.use(routes);

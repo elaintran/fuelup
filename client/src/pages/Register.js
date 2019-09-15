@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import API from "../utils/API.js";
 
 class Register extends Component {
     state = {
@@ -16,6 +17,7 @@ class Register extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
+        API.register(this.state);
     }
 
     render() {

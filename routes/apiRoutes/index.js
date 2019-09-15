@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
+const userController = require("../../controllers/userController.js");
 
 router.get("/gasbuddy/:id", (req, res) => {
     axios.get(`https://www.gasbuddy.com/home?search=${req.params.id}&fuel=1`)
@@ -39,5 +40,8 @@ router.get("/gasbuddy/:id", (req, res) => {
             });
         });
 });
+
+router.route("/register")
+    .post(userController.create);
 
 module.exports = router;
