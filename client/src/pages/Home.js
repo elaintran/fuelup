@@ -31,16 +31,19 @@ class Home extends Component {
         this.searchGas("78634");
     }
 
+    //Handles city and zipcode search input
     handleInput = event => {
         let value = event.target.value;
         this.setState({ query: value });
     }
 
+    //Handles search submission and calls GasBuddy API function
     handleSubmit = event => {
         event.preventDefault();
         this.searchGas(this.state.query);
     }
 
+    //Adjust map zoom according to gas station clicked and zooms into selected point
     handleCenter = index => {
         this.setState({
             center: {
@@ -51,30 +54,41 @@ class Home extends Component {
         });
     }
 
+    //Sends query to the GasBuddy scraper
     searchGas = query => {
         API.findGas(query)
             .then(response => {
+                //Return prices of Regular fuel type to display on map
                 const prices = response.data.map(prices => {
                     return prices.gasType[0].price
                 });
+                //Retrieves gas station data, and resets Brand and Fuel Type values
                 this.setState({
                     results: response.data,
                     prices: prices,
                     search: true,
-                    brandPlaceholder: "Brand"
+                    brandPlaceholder: "Brand",
+                    fuelPlaceholder: "Fuel Type"
                 });
+                //Calls address conversion function to convert address to coordinates
                 this.convertAddress();
             });
     }
 
+    //Converts address from the results into longitude and latitude coordinates and adjusts the center of the map to the first result
     convertAddress = () => {
         let coordinates;
+        //If no filter is applied,
         if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+            //Convert address of all results into coordinates
             coordinates = this.state.results.map(async address => this.renderLocation(address));
         } else {
+            //If filter is applied, convert address of the filtered results
             coordinates = this.state.filterResults.map(async address => this.renderLocation(address));
         }
+        //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
+            //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
             this.setState({
                 coordinates: response,
                 center: response[0]
@@ -85,7 +99,9 @@ class Home extends Component {
     }
 
     checkResults = () => {
+        //If no filter is applied
         if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+            //Map out all of the returning results onto the page
             return this.state.results.map((results, index) => this.renderResults(results, index));
         } else {
             if (this.state.filterResults.length !== 0) {
@@ -96,27 +112,42 @@ class Home extends Component {
         }
     }
 
+    //Display all unique brands in the Brand dropdown
     checkBrand = () => {
+        //If search yields returning results
         if (this.state.results.length !== 0) {
+            //Map out all of the gas stations from the results
             const station = this.state.results.map(station => station.station);
+            //Filter out duplicate brands and return unique brands in an object format
             let stationSet = new Set(station);
+            //Convert the brand objects into an array
             stationSet = [...stationSet];
+            //Map out the brand array and return a list of dropdown items consisting of unique brands
             return stationSet.map(station => <Dropdown.Item text={station} onClick={() => this.filterBrand(station)} />);
         }
     }
 
+    //Function for Fuel Type dropdown items
     filterFuel = fuel => {
         let filterFuel = [];
         let filterPrices = [];
         let filter = false;
+        //If a fuel type is selected and a brand is not selected
         if (fuel !== "Fuel Type" && this.state.brandPlaceholder === "Brand") {
+            //Filter new results from the original results by fuel type
             filterFuel = this.state.results.filter(station => this.renderFuel(station, fuel));
+        //If a fuel type and brand is selected
         } else if (fuel !== "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+            //Filter new results from the filtered results by fuel type
             filterFuel = this.state.filterResults.filter(station => this.renderFuel(station, fuel));
+        //If a fuel type is not selected and brand is selected
         } else if (fuel === "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+            //Filter new results from the original results by brand
             filterFuel = this.state.results.filter(station => this.renderBrand(station, this.state.brandPlaceholder));
         }
+        //If filter yields results
         if (filterFuel.length !== 0) {
+            //Return prices to display on map depending on the fuel type selected
             filterPrices = filterFuel.map(prices => {
                 return this.renderPrice(prices, fuel);
             });
@@ -131,23 +162,34 @@ class Home extends Component {
         }, () => this.convertAddress());
     }
 
+    //Function for Brand dropdown items
     filterBrand = brand => {
         let filterStation = [];
         let filterPrices = [];
         let filter = false;
+        //If brand is selected and fuel type is not selected
         if (brand !== "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+            //Filter new results from the original results by brand
             filterStation = this.state.results.filter(station => this.renderBrand(station, brand));
+        //If both brand and fuel type are selected
         } else if (brand !== "Brand" && this.state.fuelPlaceholder !== "Fuel Type") {
+            //Filter new results from the filtered results by brand
             filterStation = this.state.filterResults.filter(station => this.renderBrand(station, brand));
+        //If brand is not selected and fuel is selected
         } else if (brand === "Brand" && this.state.fuelPlaceholder !== "Fuel Type") {
+            //Filter new results from the original results by fuel type
             filterStation = this.state.results.filter(station => this.renderFuel(station, this.state.fuelPlaceholder));
         }
+        //If filter yields results and fuel type is not selected
         if (filterStation.length !== 0 && this.state.fuelPlaceholder === "Fuel Type") {
+            //Return Regular gas prices to display on map
             filterPrices = filterStation.map(prices => {
                 return prices.gasType[0].price;
             });
             filter = true;
+        //If filter yields results and fuel type is selected
         } else if (filterStation.length !== 0 && this.state.fuelPlaceholder !== "Fuel Type") {
+            //Return prices to display on map depending on the fuel type selected
             filterPrices = filterStation.map(prices => {
                 return this.renderPrice(prices, this.state.fuelPlaceholder);
             });
@@ -162,6 +204,7 @@ class Home extends Component {
         }, () => this.convertAddress());
     }
 
+    //Returns individual results
     renderResults = (results, index) => {
         return (
             <Results
@@ -176,6 +219,7 @@ class Home extends Component {
         );
     }
 
+    //Calls the Mapbox Forward Geocode API and converts address into longitude and latitude coordinates
     renderLocation = address => {
         return API.forwardGeocode(address.address).then(response => {
             const coordinatesObj = {
@@ -186,6 +230,7 @@ class Home extends Component {
         });
     }
 
+    //Checks if station has the fuel type selected
     renderFuel = (station, fuel) => {
         const filterStation = station.gasType.filter(gas => {
             if (gas.type === fuel) {
@@ -197,12 +242,14 @@ class Home extends Component {
         }
     }
 
+    //Checks if station matches the brand selected
     renderBrand = (station, brand) => {
         if (station.station === brand) {
             return station;
         }
     }
 
+    //Display price on map depending on the type of fuel
     renderPrice = (prices, fuel) => {
         switch(fuel) {
             case "Midgrade":
