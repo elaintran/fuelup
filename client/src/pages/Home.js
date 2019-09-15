@@ -85,7 +85,7 @@ class Home extends Component {
     }
 
     checkResults = () => {
-        if (this.state.brandPlaceholder === "Brand") {
+        if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
             return this.state.results.map((results, index) => this.renderResults(results, index));
         } else {
             return this.state.filterResults.map((results, index) => this.renderResults(results, index));
@@ -102,21 +102,43 @@ class Home extends Component {
     }
 
     filterFuel = fuel => {
-        if (fuel !== "Fuel Type") {
-            const filterFuel = this.state.results.filter(station => {
-                const filterStation = station.gasType.filter(gas => {
-                    if (gas.type === fuel) {
-                        return gas;
-                    }
-                });
-                if (filterStation.length !== 0) {
-                    return station;
+        let filterFuel = [];
+        let filterPrices = [];
+        let filter = false;
+        if (fuel !== "Fuel Type" && this.state.brandPlaceholder === "Brand") {
+            filterFuel = this.state.results.filter(station => this.renderFuel(station, fuel));
+        } else if (fuel !== "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+            filterFuel = this.state.filterResults.filter(station => this.renderFuel(station, fuel));
+        }
+        if (filterFuel.length !== 0) {
+            filterPrices = filterFuel.map(prices => {
+                switch(fuel) {
+                    case "Midgrade":
+                        return prices.gasType[1].price;
+                        break;
+                    case "Premium":
+                        return prices.gasType[2].price;
+                        break;
+                    case "Diesel":
+                        return prices.gasType[3].price;
+                        break;
+                    case "UNL88":
+                        return prices.gasType[4].price;
+                        break;
+                    default:
+                        return prices.gasType[0].price;
                 }
             });
+            filter = true;
         }
+        console.log(filterPrices);
         this.setState({
-            fuelPlaceholder: fuel
-        });
+            filterResults: filterFuel,
+            filterPrices: filterPrices,
+            fuelPlaceholder: fuel,
+            zoom: 12,
+            filter: filter
+        }, () => this.convertAddress());
     }
 
     filterBrand = brand => {
@@ -157,7 +179,7 @@ class Home extends Component {
         );
     }
 
-    renderLocation = (address) => {
+    renderLocation = address => {
         return API.forwardGeocode(address.address).then(response => {
             const coordinatesObj = {
                 longitude: response.data.features[0].center[0],
@@ -165,6 +187,17 @@ class Home extends Component {
             };
             return coordinatesObj;
         });
+    }
+
+    renderFuel = (station, fuel) => {
+        const filterStation = station.gasType.filter(gas => {
+            if (gas.type === fuel) {
+                return gas;
+            }
+        });
+        if (filterStation.length !== 0) {
+            return station;
+        }
     }
 
     render() {
