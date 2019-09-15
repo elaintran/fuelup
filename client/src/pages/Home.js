@@ -233,7 +233,7 @@ class Home extends Component {
     //Checks if station has the fuel type selected
     renderFuel = (station, fuel) => {
         const filterStation = station.gasType.filter(gas => {
-            if (gas.type === fuel) {
+            if (gas.type === fuel && gas.price !== "- - -") {
                 return gas;
             }
         });
