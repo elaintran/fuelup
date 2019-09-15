@@ -14,10 +14,12 @@ class Home extends Component {
         results: [],
         filterResults: [],
         coordinates: [],
+        currentCoordinates: {},
         center: {
             longitude: "-97.7431",
             latitude: "30.2672"
         },
+        distance: [],
         prices: [],
         filterPrices: [],
         brandPlaceholder: "Brand",
@@ -28,7 +30,6 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        // this.searchGas("78634");
         this.getGeolocation();
     }
 
@@ -42,7 +43,10 @@ class Home extends Component {
 
     showPosition = position => {
         API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
-            .then(response => this.searchGas(response.data.features[2].text));
+            .then(response => {
+                this.searchGas(response.data.features[2].text);
+                this.setState({ currentCoordinates: `${position.coords.longitude},${position.coords.latitude}`});
+            });
     }
 
     //Handles city and zipcode search input
@@ -59,6 +63,7 @@ class Home extends Component {
 
     //Adjust map zoom according to gas station clicked and zooms into selected point
     handleCenter = index => {
+        API.directions(this.state.currentCoordinates, `${this.state.coordinates[index].longitude},${this.state.coordinates[index].latitude}`).then(response => console.log(response));
         this.setState({
             center: {
                 longitude: this.state.coordinates[index].longitude,
@@ -102,15 +107,25 @@ class Home extends Component {
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
-            //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
-            if (response.length !== 0) {
-                this.setState({
-                    coordinates: response,
-                    center: response[0]
-                });
-            } else {
-                this.setState({ coordinates: [] })
-            }
+            const milesArr = response.map(async coordinates => {
+                return API.directions(this.state.currentCoordinates, `${coordinates.longitude},${coordinates.latitude}`).then(response => {
+                    const meters = response.data.routes[0].distance;
+                    const miles = (meters * 0.000621371).toFixed(1);
+                    return miles;
+                })
+            })
+            Promise.all(milesArr).then(data => {
+                //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
+                if (response.length !== 0) {
+                    this.setState({
+                        coordinates: response,
+                        center: response[0],
+                        distance: data
+                    });
+                } else {
+                    this.setState({ coordinates: [] })
+                }
+            })
         }).catch(err => {
             console.log(err);
         });
@@ -252,6 +267,7 @@ class Home extends Component {
                 logo={results.logo}
                 address={results.address}
                 gasType={results.gasType}
+                distance={this.state.distance[index]}
                 id={index}
                 key={index}
                 click={this.handleCenter}
@@ -328,6 +344,7 @@ class Home extends Component {
                             <SearchBar
                                 change={this.handleInput}
                                 submit={this.handleSubmit}
+                                value={this.state.searchValue}
                             />
                             <DropdownContainer>
                                 <Dropdown text={this.state.fuelPlaceholder}>
