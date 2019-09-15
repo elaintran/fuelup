@@ -69,7 +69,7 @@ class Home extends Component {
 
     convertAddress = () => {
         let coordinates;
-        if (this.state.brandPlaceholder === "Brand") {
+        if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
             coordinates = this.state.results.map(async address => this.renderLocation(address));
         } else {
             coordinates = this.state.filterResults.map(async address => this.renderLocation(address));
@@ -101,13 +101,31 @@ class Home extends Component {
         }
     }
 
-    filterBrand = item => {
+    filterFuel = fuel => {
+        if (fuel !== "Fuel Type") {
+            const filterFuel = this.state.results.filter(station => {
+                const filterStation = station.gasType.filter(gas => {
+                    if (gas.type === fuel) {
+                        return gas;
+                    }
+                });
+                if (filterStation.length !== 0) {
+                    return station;
+                }
+            });
+        }
+        this.setState({
+            fuelPlaceholder: fuel
+        });
+    }
+
+    filterBrand = brand => {
         let filterStation = [];
         let filterPrices = [];
         let filter = false;
-        if (item !== "Brand") {
+        if (brand !== "Brand") {
             filterStation = this.state.results.filter(station => {
-                if (station.station === item) {
+                if (station.station === brand) {
                     return station;
                 }
             });
@@ -119,7 +137,7 @@ class Home extends Component {
         this.setState({
             filterResults: filterStation,
             filterPrices: filterPrices,
-            brandPlaceholder: item,
+            brandPlaceholder: brand,
             zoom: 12,
             filter: filter
         }, () => this.convertAddress());
@@ -172,11 +190,12 @@ class Home extends Component {
                             <DropdownContainer>
                                 <Dropdown text={this.state.fuelPlaceholder}>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item text="Regular" />
-                                        <Dropdown.Item text="Midgrade" />
-                                        <Dropdown.Item text="Premium" />
-                                        <Dropdown.Item text="Diesel" />
-                                        <Dropdown.Item text="UNCL88" />
+                                        <Dropdown.Item text="Fuel Type" onClick={() => this.filterFuel("Fuel Type")} />
+                                        <Dropdown.Item text="Regular" onClick={() => this.filterFuel("Regular")} />
+                                        <Dropdown.Item text="Midgrade" onClick={() => this.filterFuel("Midgrade")} />
+                                        <Dropdown.Item text="Premium" onClick={() => this.filterFuel("Premium")} />
+                                        <Dropdown.Item text="Diesel" onClick={() => this.filterFuel("Diesel")} />
+                                        <Dropdown.Item text="UNL88" onClick={() => this.filterFuel("UNL88")} />
                                     </Dropdown.Menu>
                                 </Dropdown>
                                 <Dropdown text={this.state.brandPlaceholder}>
