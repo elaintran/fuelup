@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import { Dropdown } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
 import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
 import DropdownContainer from "../components/DropdownContainer";
-import { Dropdown } from "semantic-ui-react";
 import API from "../utils/API.js";
 
 class Home extends Component {
@@ -147,6 +147,7 @@ class Home extends Component {
         }
         //If filter yields results
         if (filterFuel.length !== 0) {
+            filterFuel = this.sortPrice(filterFuel, fuel);
             //Return prices to display on map depending on the fuel type selected
             filterPrices = filterFuel.map(prices => {
                 return this.renderPrice(prices, fuel);
@@ -202,6 +203,27 @@ class Home extends Component {
             zoom: 12,
             filter: filter
         }, () => this.convertAddress());
+    }
+
+    sortPrice = (results, fuel) => {
+        return results.sort((a, b) => {
+            switch(fuel) {
+                case "Midgrade":
+                    return (a.gasType[1].price > b.gasType[1].price) ? 1 : -1;
+                    break;
+                case "Premium":
+                    return (a.gasType[2].price > b.gasType[2].price) ? 1 : -1;
+                    break;
+                case "Diesel":
+                    return (a.gasType[3].price > b.gasType[3].price) ? 1 : -1;
+                    break;
+                case "UNL88":
+                    return (a.gasType[4].price > b.gasType[4].price) ? 1 : -1;
+                    break;
+                default:
+                    return (a.gasType[0].price > b.gasType[0].price) ? 1 : -1;
+            }
+        });
     }
 
     //Returns individual results
