@@ -26,11 +26,22 @@ class Home extends Component {
         fuelPlaceholder: "Fuel Type",
         zoom: 12,
         search: false,
-        filter: false
+        filter: false,
+        loggedIn: false,
+        username: ""
     }
 
     componentDidMount() {
         this.getGeolocation();
+        this.checkLoginStatus();
+    }
+
+    checkLoginStatus = () => {
+        API.checkUser().then(response => {
+            this.setState({ username: response.data.fullName });
+        }).catch(err => {
+            this.setState({ loggedIn: false });
+        });
     }
 
     getGeolocation = () => {
@@ -331,7 +342,7 @@ class Home extends Component {
                 <FlexContainer width="95%">
                     <p>Home</p>
                     <DropdownContainer>
-                        <Dropdown text="Elain Tran">
+                        <Dropdown text={this.state.username}>
                             <Dropdown.Menu>
                                 <Dropdown.Item text="Sign Out" />
                             </Dropdown.Menu>

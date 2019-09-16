@@ -15,5 +15,8 @@ export default {
     },
     login: obj => {
         return axios.post("/api/login", obj);
+    },
+    checkUser: () => {
+        return axios.get("/api/user");
     }
 };

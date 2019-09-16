@@ -49,4 +49,12 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
     res.json(req.user);
 });
 
+router.get("/user", (req, res) => {
+    if (req.user) {
+        res.json({ fullName: `${req.user.firstName} ${req.user.lastName}`});
+    } else {
+        res.sendStatus(401);
+    }
+})
+
 module.exports = router;

@@ -15,7 +15,9 @@ class Login extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        API.login(this.state);
+        API.login(this.state).then(response => {
+            window.location.pathname = "/";
+        });
     }
 
     render() {
