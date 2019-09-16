@@ -8,8 +8,11 @@ module.exports = {
     },
     create: (req, res) => {
         db.Station.create(req.body)
-            .then(response => res.json(response))
-            .catch(err => res.status(422).json(err));
+            .then(response => {
+                db.User.findOneAndUpdate({ _id: req.params.id }, {$push: {"station": response._id}}, {new: true})
+                    .then(response => res.json(response))
+                    .catch(err => res.status(422).json(err));
+            })
     },
     remove: (req, res) => {
         db.Station.remove({ _id: req.params.id })

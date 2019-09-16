@@ -30,7 +30,8 @@ class Home extends Component {
         search: false,
         filter: false,
         loggedIn: false,
-        username: ""
+        username: "",
+        userId: ""
     }
 
     componentDidMount() {
@@ -42,7 +43,8 @@ class Home extends Component {
         API.checkUser().then(response => {
             this.setState({ 
                 loggedIn: true,
-                username: response.data.fullName
+                username: `${response.data.firstName} ${response.data.lastName}`,
+                userId: response.data._id
             });
         }).catch(err => {
             this.setState({ loggedIn: false });
@@ -188,6 +190,16 @@ class Home extends Component {
         }
     }
 
+    addFavorites = (station, address, link, index) => {
+        API.favorite({
+            station: station,
+            address: address,
+            link: link,
+            longitude: this.state.coordinates[index].longitude,
+            latitude: this.state.coordinates[index].latitude
+        }, this.state.userId);
+    }
+
     //Display all unique brands in the Brand dropdown
     checkBrand = () => {
         //If search yields returning results
@@ -310,10 +322,13 @@ class Home extends Component {
                 logo={results.logo}
                 address={results.address}
                 gasType={results.gasType}
+                link={results.link}
                 distance={this.state.distance[index]}
                 id={index}
                 key={index}
                 click={this.handleCenter}
+                loggedIn={this.state.loggedIn}
+                favorite={this.addFavorites}
             />
         );
     }

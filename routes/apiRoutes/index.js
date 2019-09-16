@@ -2,8 +2,10 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const userController = require("../../controllers/userController.js");
+const stationController = require("../../controllers/stationController.js");
 const passport = require("../../config/passport.js");
 
+//GasBuddy Station Scraper
 router.get("/gasbuddy/:id", (req, res) => {
     axios.get(`https://www.gasbuddy.com/home?search=${req.params.id}&fuel=1`)
         .then(response => {
@@ -42,6 +44,7 @@ router.get("/gasbuddy/:id", (req, res) => {
         });
 });
 
+//User Authentication
 router.route("/register")
     .post(userController.create);
 
@@ -51,7 +54,7 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 
 router.get("/user", (req, res) => {
     if (req.user) {
-        res.json({ fullName: `${req.user.firstName} ${req.user.lastName}`});
+        res.json(req.user);
     } else {
         res.sendStatus(401);
     }
@@ -61,5 +64,9 @@ router.get("/logout", (req, res) => {
     req.logout();
     res.sendStatus(200);
 });
+
+router.route("/user/:id")
+    .post(stationController.create)
+
 
 module.exports = router;

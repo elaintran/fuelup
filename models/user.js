@@ -22,7 +22,11 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    station: [{
+        type: Schema.Types.ObjectId,
+        ref: "Station"
+    }]
 });
 
 // UserSchema.plugin(uniqueValidator);

@@ -21,5 +21,8 @@ export default {
     },
     checkUser: () => {
         return axios.get("/api/user");
+    },
+    favorite: (station, id) => {
+        return axios.post(`/api/user/${id}`, station);
     }
 };
