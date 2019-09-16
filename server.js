@@ -1,7 +1,9 @@
 const express = require("express");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const app = express();
 const routes = require("./routes");
+const passport = require("./config/passport.js");
 const PORT = process.env.PORT || 3001;
 
 //express parsing middleware
@@ -11,6 +13,10 @@ app.use(express.json());
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
 }
+
+//Passport configuration
+app.use(passport.initialize());
+app.use(passport.session());
 
 // connect to mongo database
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fuelupdb");

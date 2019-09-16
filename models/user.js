@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
     firstName: {
         type: String,
         required: true
@@ -15,12 +16,20 @@ const userSchema = new Schema({
         unique: true,
         required: true
     },
-    password: {
+    passwordHash: {
         type: String,
         required: true
     }
 });
 
-const User = mongoose.model("User", userSchema);
+UserSchema.methods.checkPassword = password => {
+    return bcrypt.comparePassword(password, this.passwordHash);
+}
+
+UserSchema.virtual("password").set(value => {
+    this.passwordHash = bcrypt.hashSync(value, 12);
+});
+
+const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
