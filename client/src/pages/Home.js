@@ -6,6 +6,8 @@ import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
 import DropdownContainer from "../components/DropdownContainer";
+import MenuContainer from "../components/MenuContainer";
+import MenuButton from "../components/MenuButton";
 import API from "../utils/API.js";
 
 class Home extends Component {
@@ -66,10 +68,10 @@ class Home extends Component {
             );
         } else {
             return (
-                <div>
-                    <p>Login</p>
-                    <p>Sign Up</p>
-                </div>
+                <MenuContainer>
+                    <MenuButton link="login" name="Login" />
+                    <MenuButton link="register" name="Sign Up" padding="10px" background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)" />
+                </MenuContainer>
             );
         }
     }
