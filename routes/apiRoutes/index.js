@@ -44,4 +44,7 @@ router.get("/gasbuddy/:id", (req, res) => {
 router.route("/register")
     .post(userController.create);
 
+router.route("/login")
+    .post(userController.authenticate);
+
 module.exports = router;
