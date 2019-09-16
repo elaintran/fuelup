@@ -31,10 +31,8 @@ module.exports = {
             //     }
             // });
     },
-    authenticate: () => {
-        passport.authenticate("local", {
-            successRedirect: "/",
-            failureRedirect: "/login"
-        });
+    authenticate: (req, res) => {
+        console.log(req.body);
+        res.json(req.body);
     }
 }

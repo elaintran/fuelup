@@ -12,5 +12,8 @@ export default {
     },
     register: obj => {
         return axios.post("/api/register", obj);
+    },
+    login: obj => {
+        return axios.post("/api/login", obj);
     }
 };

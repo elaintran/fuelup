@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const passportLocalMongoose = require("passport-local-mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
 const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 const SALT_WORK_FACTOR = 10;
@@ -45,12 +45,11 @@ UserSchema.pre('save', function(next) {
     });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
-    });
-};
+UserSchema.methods.checkPassword = function(password){
+    return bcrypt.compare(password, this.password)
+}
+
+UserSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model("User", UserSchema);
 
