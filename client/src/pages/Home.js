@@ -38,10 +38,40 @@ class Home extends Component {
 
     checkLoginStatus = () => {
         API.checkUser().then(response => {
-            this.setState({ username: response.data.fullName });
+            this.setState({ 
+                loggedIn: true,
+                username: response.data.fullName
+            });
         }).catch(err => {
             this.setState({ loggedIn: false });
         });
+    }
+
+    userLogout = () => {
+        API.logout().then(response => {
+            this.setState({ loggedIn: false })
+        });
+    }
+
+    displayNavItems = () => {
+        if (this.state.loggedIn === true) {
+            return (
+                <DropdownContainer>
+                    <Dropdown text={this.state.username}>
+                        <Dropdown.Menu>
+                            <Dropdown.Item text="Sign Out" onClick={() => this.userLogout()} />
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </DropdownContainer>
+            );
+        } else {
+            return (
+                <div>
+                    <p>Login</p>
+                    <p>Sign Up</p>
+                </div>
+            );
+        }
     }
 
     getGeolocation = () => {
@@ -341,13 +371,7 @@ class Home extends Component {
             <div>
                 <FlexContainer width="95%">
                     <p>Home</p>
-                    <DropdownContainer>
-                        <Dropdown text={this.state.username}>
-                            <Dropdown.Menu>
-                                <Dropdown.Item text="Sign Out" />
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </DropdownContainer>
+                    {this.displayNavItems()}
                 </FlexContainer>
                 <FlexContainer width="95%">
                     <SubContainer width="45%">

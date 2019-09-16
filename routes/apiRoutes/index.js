@@ -55,6 +55,11 @@ router.get("/user", (req, res) => {
     } else {
         res.sendStatus(401);
     }
-})
+});
+
+router.get("/logout", (req, res) => {
+    req.logout();
+    res.sendStatus(200);
+});
 
 module.exports = router;

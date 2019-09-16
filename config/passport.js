@@ -20,10 +20,12 @@ passport.use(new LocalStrategy({usernameField: "email", passwordField: "password
     }).catch(err => console.log(err));
 }))
 
-passport.serializeUser((user, done) => done(null, user._id));
+passport.serializeUser((user, done) => {
+    done(null, user._id)
+});
 passport.deserializeUser((user, done) => {
-    db.User.findOne(user._id, (err, user) => {
-        done(err, user);
+    db.User.findById(user, (err, response) => {
+        done(err, response);
     });
 });
 
