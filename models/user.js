@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const passportLocalMongoose = require("passport-local-mongoose");
+// const passportLocalMongoose = require("passport-local-mongoose");
+// const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 const SALT_WORK_FACTOR = 10;
@@ -23,6 +24,8 @@ const UserSchema = new Schema({
         required: true
     }
 });
+
+// UserSchema.plugin(uniqueValidator);
 
 UserSchema.pre('save', function(next) {
     var user = this;
@@ -48,8 +51,6 @@ UserSchema.pre('save', function(next) {
 UserSchema.methods.checkPassword = function(password){
     return bcrypt.compare(password, this.password)
 }
-
-UserSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model("User", UserSchema);
 
