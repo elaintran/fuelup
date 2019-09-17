@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom"; 
 import { Dropdown } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
@@ -7,8 +6,6 @@ import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
 import DropdownContainer from "../components/DropdownContainer";
-import MenuContainer from "../components/MenuContainer";
-import MenuButton from "../components/MenuButton";
 import API from "../utils/API.js";
 
 class Home extends Component {
@@ -18,7 +15,7 @@ class Home extends Component {
         filterResults: [],
         favorites: [],
         coordinates: [],
-        currentCoordinates: {},
+        currentCoordinates: "-97.7431,30.2672",
         center: {
             longitude: "-97.7431",
             latitude: "30.2672"
@@ -31,21 +28,18 @@ class Home extends Component {
         zoom: 12,
         search: false,
         filter: false,
-        loggedIn: false,
-        username: "",
-        userId: ""
+        userId: "",
+        loggedIn: false
     }
 
     componentDidMount() {
         this.getGeolocation();
-        this.checkLoginStatus();
     }
 
     checkLoginStatus = () => {
         API.checkUser().then(response => {
             this.setState({ 
                 loggedIn: true,
-                username: `${response.data.firstName} ${response.data.lastName}`,
                 userId: response.data._id
             }, this.getFavorites(response.data.station));
         }).catch(err => {
@@ -68,36 +62,17 @@ class Home extends Component {
         });
     }
 
-    displayNavItems = () => {
-        if (this.state.loggedIn === true) {
-            return (
-                <DropdownContainer>
-                    <Dropdown text={this.state.username}>
-                        <Dropdown.Menu>
-                            <Dropdown.Item text="Sign Out" onClick={() => this.userLogout()} />
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </DropdownContainer>
-            );
-        } else {
-            return (
-                <MenuContainer>
-                    <MenuButton link="login" name="Login" />
-                    <MenuButton
-                        link="register"
-                        name="Sign Up"
-                        background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)"
-                        white="white"
-                        padding="11px 16px"
-                        border="0" />
-                </MenuContainer>
-            );
-        }
-    }
-
     getGeolocation = () => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.showPosition);
+            navigator.geolocation.getCurrentPosition(this.showPosition, err => {
+                console.log(err);
+                this.searchGas("78753");
+            });
+            // if (navigator.geolocation.getCurrentPosition(this.showPosition) !== undefined) {
+            //     navigator.geolocation.getCurrentPosition(this.showPosition);
+            // } else {
+            //     this.searchGas("78753");                
+            // }
         } else {
             this.searchGas("78753");
         }
@@ -113,8 +88,9 @@ class Home extends Component {
 
     //Handles city and zipcode search input
     handleInput = event => {
+        const name = event.target.name;
         let value = event.target.value;
-        this.setState({ query: value });
+        this.setState({ [name]: value });
     }
 
     //Handles search submission and calls GasBuddy API function
@@ -423,11 +399,6 @@ class Home extends Component {
     render() {
         return (
             <div>
-                <FlexContainer width="95%">
-                    <p>Home</p>
-                    {(this.state.loggedIn === true) ? <Link to="/favorites"><p>Favorites</p></Link> : false}
-                    {this.displayNavItems()}
-                </FlexContainer>
                 <FlexContainer width="95%">
                     <SubContainer width="45%">
                         <FlexContainer>

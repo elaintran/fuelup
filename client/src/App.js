@@ -4,6 +4,7 @@ import Home from "./pages/Home.js";
 import Register from "./pages/Register.js";
 import Login from "./pages/Login.js";
 import Favorites from "./pages/Favorites.js";
+import NavBar from "./components/NavBar";
 import API from "./utils/API.js";
 
 class App extends Component {
@@ -26,11 +27,12 @@ class App extends Component {
     render() {
         return (
             <Router>
+                <NavBar />
                 <Switch>
-                    {(this.state.loggedIn === true) ? <Route exact path="/favorites" component={Favorites} /> : false }
+                    {/* {(this.state.loggedIn === true) ? <Route exact path="/favorites" component={Favorites} /> : false }
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/register" component={Register} />
-                    <Route component={Home} />
+                    <Route component={Home} /> */}
                 </Switch>
             </Router>
         );
