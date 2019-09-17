@@ -36,7 +36,7 @@ class Favorites extends Component {
     }
 
     componentDidMount() {
-        // this.getGeolocation();
+        this.getGeolocation();
         this.checkLoginStatus();
     }
 
@@ -100,6 +100,7 @@ class Favorites extends Component {
     showPosition = position => {
         API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
             .then(response => {
+                // console.log(response.data.features[2].text);
                 // this.searchFavorites(response.data.features[2].text);
                 this.setState({ currentCoordinates: `${position.coords.longitude},${position.coords.latitude}`});
             });
@@ -141,7 +142,13 @@ class Favorites extends Component {
             });
         });
         Promise.all(results).then(response => {
-            this.setState({ results: response }, this.convertAddress());
+            const prices = response.map(prices => {
+                return prices.gasType[0].price;
+            });
+            this.setState({ 
+                results: response,
+                prices: prices
+            }, () => this.convertAddress());
         });
     }
 
@@ -151,10 +158,10 @@ class Favorites extends Component {
         //If no filter is applied,
         if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
             //Convert address of all results into coordinates
-            coordinates = this.state.results.map(async address => this.renderLocation(address));
+            coordinates = this.state.results.map(async address => this.renderLocation(address.longitude, address.latitude));
         } else {
             //If filter is applied, convert address of the filtered results
-            coordinates = this.state.filterResults.map(async address => this.renderLocation(address));
+            coordinates = this.state.filterResults.map(async address => this.renderLocation(address.longitude, address.latitude));
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
@@ -163,7 +170,7 @@ class Favorites extends Component {
                     const meters = response.data.routes[0].distance;
                     const miles = (meters * 0.000621371).toFixed(1);
                     return miles;
-                })
+                });
             })
             Promise.all(milesArr).then(data => {
                 //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
@@ -347,14 +354,12 @@ class Favorites extends Component {
     }
 
     //Calls the Mapbox Forward Geocode API and converts address into longitude and latitude coordinates
-    renderLocation = address => {
-        return API.geocode(address.address).then(response => {
-            const coordinatesObj = {
-                longitude: response.data.features[0].center[0],
-                latitude: response.data.features[0].center[1]
-            };
-            return coordinatesObj;
-        });
+    renderLocation = (longitude, latitude) => {
+        const coordinatesObj = {
+            longitude: longitude,
+            latitude: latitude
+        };
+        return coordinatesObj;
     }
 
     //Checks if station has the fuel type selected
@@ -402,7 +407,7 @@ class Favorites extends Component {
         return (
             <div>
                 <FlexContainer width="95%">
-                    {console.log(this.state.loggedIn)}
+                    {/* {console.log(this.state.results)} */}
                     <p>Home</p>
                     {(this.state.loggedIn === true) ? <Link to="/favorites"><p>Favorites</p></Link> : false}
                     {this.displayNavItems()}
@@ -440,7 +445,7 @@ class Favorites extends Component {
                         <Map
                             coordinates={this.state.coordinates}
                             center={this.state.center}
-                            search={this.state.search}
+                            search={true}
                             price={this.state.prices}
                             filterPrice={this.state.filterPrices}
                             zoom={this.state.zoom}

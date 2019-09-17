@@ -19,7 +19,7 @@ const checkCoordinates = (arr, search, price, filterPrice, filter) => {
                     <i className="fas fa-circle"></i>
                 </Marker>
             );
-        })
+        });
     }
 }
 
