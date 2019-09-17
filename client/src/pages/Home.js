@@ -83,7 +83,13 @@ class Home extends Component {
             return (
                 <MenuContainer>
                     <MenuButton link="login" name="Login" />
-                    <MenuButton link="register" name="Sign Up" padding="10px" background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)" />
+                    <MenuButton
+                        link="register"
+                        name="Sign Up"
+                        background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)"
+                        white="white"
+                        padding="11px 16px"
+                        border="0" />
                 </MenuContainer>
             );
         }

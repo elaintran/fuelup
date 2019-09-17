@@ -4,9 +4,18 @@ import "./style.sass";
 
 function MenuButton(props) {
     return (
-        // <div className="menu-button" style={{padding: props.padding || 0}, {background: props.background || "transparent"}}>
-        <div className="menu-button">    
-            <Link to={`/${props.link}`}>{props.name}</Link>
+        <div className="button-container">
+            <Link to={`/${props.link}`}>
+                <div
+                    className="menu-button"
+                    style={{
+                        background: props.background || "",
+                        color: props.white || "",
+                        padding: props.padding || "9px 14px",
+                        border: props.border || ""}}>
+                    {props.name}
+                </div>
+            </Link>
         </div>
     );
 }
