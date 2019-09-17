@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Modal } from "semantic-ui-react";
 import { Link } from "react-router-dom"; 
 import { Dropdown } from "semantic-ui-react";
 import UserForm from "../UserForm";
@@ -6,6 +7,7 @@ import FlexContainer from "../FlexContainer";
 import DropdownContainer from "../DropdownContainer";
 import MenuContainer from "../MenuContainer";
 import MenuButton from "../MenuButton";
+import ButtonContainer from "../ButtonContainer";
 import API from "../../utils/API.js";
 import "./style.sass";
 
@@ -14,7 +16,8 @@ class NavBar extends Component {
         fullName: "",
         email: "",
         password: "",
-        loggedIn: false
+        loggedIn: false,
+        open: false
     }
 
     componentDidMount() {
@@ -45,6 +48,10 @@ class NavBar extends Component {
         }).catch(err => console.log(err));
     }
 
+
+    openModal = () => this.setState({ open: true });
+    closeModal = () => this.setState({ open: false });
+
     displayNavItems = () => {
         if (this.state.loggedIn === true) {
             return (
@@ -59,34 +66,48 @@ class NavBar extends Component {
         } else {
             return (
                 <MenuContainer>
-                    <MenuButton link="login" name="Login">
-                        <UserForm submit={this.handleLogin}>
-                            <label>Email Address</label>
-                            <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
-                            <label>Password</label>
-                            <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
-                            <input className="submit-type" type="submit" value="Login" />
-                            <p>Don't have an account? Sign up.</p>
-                        </UserForm>
-                    </MenuButton>
-                    <MenuButton
-                        link="/register"
-                        name="Sign Up"
-                        background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)"
-                        white="white"
-                        padding="11px 16px"
-                        border="0">
-                        <UserForm submit={this.handleSignUp}>
-                            <label>Full Name</label>
-                            <input className="input-type" type="text" name="fullName" placeholder="Full Name" onChange={this.handleInput} required/>
-                            <label>Email Address</label>
-                            <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
-                            <label>Password</label>
-                            <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
-                            <input className="submit-type" type="submit" value="Sign Up" />
-                            <p>Have an account? Login.</p>
-                        </UserForm>
-                    </MenuButton>
+                    <ButtonContainer>
+                        <Modal trigger={
+                            <MenuButton link="login" name="Login" />
+                        }>
+                            <Modal.Header>Login</Modal.Header>
+                            <Modal.Content>
+                                <UserForm submit={this.handleLogin}>
+                                    <label>Email Address</label>
+                                    <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
+                                    <label>Password</label>
+                                    <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
+                                    <input className="submit-type" type="submit" value="Login" />
+                                    <p>Don't have an account? Sign up.</p>
+                                </UserForm>
+                            </Modal.Content>
+                        </Modal>
+                    </ButtonContainer>
+                    <ButtonContainer>
+                        <Modal trigger={
+                            <MenuButton
+                                link="/register"
+                                name="Sign Up"
+                                background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)"
+                                white="white"
+                                padding="11px 16px"
+                                border="0"/>
+                            }>
+                            <Modal.Header>Sign Up</Modal.Header>
+                            <Modal.Content>
+                                <UserForm submit={this.handleSignUp}>
+                                    <label>Full Name</label>
+                                    <input className="input-type" type="text" name="fullName" placeholder="Full Name" onChange={this.handleInput} required/>
+                                    <label>Email Address</label>
+                                    <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
+                                    <label>Password</label>
+                                    <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
+                                    <input className="submit-type" type="submit" value="Sign Up" />
+                                    <p>Have an account? Login.</p>
+                                </UserForm>
+                            </Modal.Content>
+                        </Modal>
+                    </ButtonContainer>
                 </MenuContainer>
             );
         }
