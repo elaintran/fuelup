@@ -6,9 +6,12 @@ const StationSchema = new Schema({
         type: String,
         required: true
     },
+    logo: {
+        type: String,
+        required: true
+    },
     address: {
         type: String,
-        unique: true,
         required: true
     },
     link: {

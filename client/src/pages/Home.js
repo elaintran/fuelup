@@ -201,11 +201,12 @@ class Home extends Component {
         }
     }
 
-    addFavorites = (station, address, link, index) => {
+    addFavorites = (station, address, link, logo, index) => {
         API.favorite({
             station: station,
             address: address,
             link: link,
+            logo: logo,
             longitude: this.state.coordinates[index].longitude,
             latitude: this.state.coordinates[index].latitude
         }, this.state.userId).then(response => this.checkLoginStatus());

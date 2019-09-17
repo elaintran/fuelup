@@ -20,6 +20,7 @@ function Results(props) {
                             saved={props.saved}
                             station={props.station}
                             address={props.address}
+                            logo={props.logo}
                             link={props.link}
                             favorite={props.favorite}
                             unfavorite={props.unfavorite}
