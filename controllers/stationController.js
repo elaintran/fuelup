@@ -6,6 +6,11 @@ module.exports = {
             .then(response => res.json(response))
             .catch(err => res.status(422).json(err));
     },
+    findOne: (req, res) => {
+        db.Station.findById(req.params.id)
+            .then(response => res.json(response))
+            .catch(err => res.send(422).json(err));
+    },
     create: (req, res) => {
         db.Station.create(req.body)
             .then(response => {

@@ -24,5 +24,8 @@ export default {
     },
     favorite: (station, id) => {
         return axios.post(`/api/user/${id}`, station);
+    },
+    getStation: id => {
+        return axios.get(`/api/station/${id}`);
     }
 };

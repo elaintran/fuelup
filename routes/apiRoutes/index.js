@@ -68,5 +68,8 @@ router.get("/logout", (req, res) => {
 router.route("/user/:id")
     .post(stationController.create)
 
+router.route("/station/:id")
+    .get(stationController.findOne)
+
 
 module.exports = router;

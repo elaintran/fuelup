@@ -15,6 +15,7 @@ class Home extends Component {
         query: "",
         results: [],
         filterResults: [],
+        favorites: [],
         coordinates: [],
         currentCoordinates: {},
         center: {
@@ -45,9 +46,18 @@ class Home extends Component {
                 loggedIn: true,
                 username: `${response.data.firstName} ${response.data.lastName}`,
                 userId: response.data._id
-            });
+            }, this.getFavorites(response.data.station));
         }).catch(err => {
             this.setState({ loggedIn: false });
+        });
+    }
+
+    getFavorites = response => {
+        const getStation = response.map(async station => {
+            return API.getStation(station).then(response => response.data); 
+        });
+        Promise.all(getStation).then(data => {
+            this.setState({ favorites: data });
         });
     }
 

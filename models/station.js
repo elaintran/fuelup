@@ -8,6 +8,7 @@ const StationSchema = new Schema({
     },
     address: {
         type: String,
+        unique: true,
         required: true
     },
     link: {
