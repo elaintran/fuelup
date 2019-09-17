@@ -62,11 +62,14 @@ class NavBar extends Component {
             return (
                 <MenuContainer>
                     <MenuButton link="login" name="Login">
-                        <form onSubmit={this.handleLogin}>
-                            <input type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
-                            <input type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
-                            <input type="submit" />
-                        </form>
+                        <UserForm submit={this.handleLogin}>
+                            <label>Email Address</label>
+                            <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
+                            <label>Password</label>
+                            <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
+                            <input className="submit-type" type="submit" value="Login" />
+                            <p>Don't have an account? Sign up.</p>
+                        </UserForm>
                     </MenuButton>
                     <MenuButton
                         link="/register"
