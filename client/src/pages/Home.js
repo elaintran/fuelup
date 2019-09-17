@@ -61,6 +61,15 @@ class Home extends Component {
         });
     }
 
+    checkMatches = () => {
+        if (this.state.loggedIn === true) {
+            const resultLocation = this.state.results.map(results => results.address);
+            const favoriteLocation = this.state.favorites.map(results => results.address);
+            console.log(resultLocation);
+            console.log(favoriteLocation);
+        }
+    }
+
     userLogout = () => {
         API.logout().then(response => {
             this.setState({ loggedIn: false })
@@ -326,6 +335,14 @@ class Home extends Component {
 
     //Returns individual results
     renderResults = (results, index) => {
+        let saved = false;
+        if (this.state.favorites.length !== 0) {
+            this.state.favorites.map(favorites => {
+                if (favorites.address === results.address) {
+                    saved = true;
+                }
+            });
+        }
         return (
             <Results
                 station={results.station}
@@ -339,6 +356,7 @@ class Home extends Component {
                 click={this.handleCenter}
                 loggedIn={this.state.loggedIn}
                 favorite={this.addFavorites}
+                saved={saved}
             />
         );
     }
@@ -375,22 +393,24 @@ class Home extends Component {
 
     //Display price on map depending on the type of fuel
     renderPrice = (prices, fuel) => {
+        let price = "";
         switch(fuel) {
             case "Midgrade":
-                return prices.gasType[1].price;
+                price = prices.gasType[1].price;
                 break;
             case "Premium":
-                return prices.gasType[2].price;
+                price = prices.gasType[2].price;
                 break;
             case "Diesel":
-                return prices.gasType[3].price;
+                price = prices.gasType[3].price;
                 break;
             case "UNL88":
-                return prices.gasType[4].price;
+                price = prices.gasType[4].price;
                 break;
             default:
-                return prices.gasType[0].price;
+                price = prices.gasType[0].price;
         }
+        return price;
     }
 
     render() {
