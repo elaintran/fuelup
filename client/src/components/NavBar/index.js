@@ -48,7 +48,6 @@ class NavBar extends Component {
         }).catch(err => console.log(err));
     }
 
-
     openModal = () => this.setState({ open: true });
     closeModal = () => this.setState({ open: false });
 
@@ -68,8 +67,8 @@ class NavBar extends Component {
                 <MenuContainer>
                     <ButtonContainer>
                         <Modal trigger={
-                            <MenuButton link="login" name="Login" />
-                        }>
+                                <MenuButton link="login" name="Login" />
+                            }>
                             <Modal.Header>Login</Modal.Header>
                             <Modal.Content>
                                 <UserForm submit={this.handleLogin}>
