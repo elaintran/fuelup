@@ -61,15 +61,6 @@ class Home extends Component {
         });
     }
 
-    checkMatches = () => {
-        if (this.state.loggedIn === true) {
-            const resultLocation = this.state.results.map(results => results.address);
-            const favoriteLocation = this.state.favorites.map(results => results.address);
-            console.log(resultLocation);
-            console.log(favoriteLocation);
-        }
-    }
-
     userLogout = () => {
         API.logout().then(response => {
             this.setState({ loggedIn: false })
@@ -216,7 +207,11 @@ class Home extends Component {
             link: link,
             longitude: this.state.coordinates[index].longitude,
             latitude: this.state.coordinates[index].latitude
-        }, this.state.userId);
+        }, this.state.userId).then(response => this.checkLoginStatus());
+    }
+
+    removeFavorites = id => {
+        API.unfavorite(this.state.userId, id).then(response => this.checkLoginStatus());
     }
 
     //Display all unique brands in the Brand dropdown
@@ -336,10 +331,12 @@ class Home extends Component {
     //Returns individual results
     renderResults = (results, index) => {
         let saved = false;
+        let favoriteId = "";
         if (this.state.favorites.length !== 0) {
             this.state.favorites.map(favorites => {
                 if (favorites.address === results.address) {
                     saved = true;
+                    favoriteId = favorites._id;
                 }
             });
         }
@@ -356,7 +353,9 @@ class Home extends Component {
                 click={this.handleCenter}
                 loggedIn={this.state.loggedIn}
                 favorite={this.addFavorites}
+                unfavorite={this.removeFavorites}
                 saved={saved}
+                favoriteId={favoriteId}
             />
         );
     }

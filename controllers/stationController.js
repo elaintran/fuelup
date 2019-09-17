@@ -20,8 +20,10 @@ module.exports = {
             })
     },
     remove: (req, res) => {
-        db.Station.remove({ _id: req.params.id })
-            .then(response => res.json(response))
-            .catch(err => res.status(422).json(err));
+        db.Station.remove({ _id: req.params.stationId })
+            .then(response => {
+                db.User.findOneAndUpdate({ _id: req.params.id }, {$pull: {"station": req.params.stationId}})
+                    .then(response => res.json(response));
+            }).catch(err => res.status(422).json(err));
     }
 }

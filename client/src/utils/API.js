@@ -25,6 +25,9 @@ export default {
     favorite: (station, id) => {
         return axios.post(`/api/user/${id}`, station);
     },
+    unfavorite: (id, stationId) => {
+        return axios.delete(`/api/user/${id}/station/${stationId}`)
+    },
     getStation: id => {
         return axios.get(`/api/station/${id}`);
     }

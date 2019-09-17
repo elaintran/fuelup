@@ -14,7 +14,16 @@ function Results(props) {
                             <i className="fas fa-map-marker-alt"></i><p>{props.address} &#183; {props.distance} mi</p>
                         </div>
                     </div>
-                    {(props.loggedIn === true) ? <HeartToggle saved={props.saved} station={props.station} address={props.address} link={props.link} favorite={props.favorite} index={props.id} /> : false}
+                    {(props.loggedIn === true) ?
+                        <HeartToggle
+                            favoriteId={props.favoriteId}
+                            saved={props.saved}
+                            station={props.station}
+                            address={props.address}
+                            link={props.link}
+                            favorite={props.favorite}
+                            unfavorite={props.unfavorite}
+                            index={props.id} /> : false}
                 </div>
                 <div className="fuel-info">
                     <div className="grade-container">
