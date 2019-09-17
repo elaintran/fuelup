@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom"; 
 import { Dropdown } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
@@ -417,6 +418,7 @@ class Home extends Component {
             <div>
                 <FlexContainer width="95%">
                     <p>Home</p>
+                    {(this.state.loggedIn === true) ? <Link to="/favorites"><p>Favorites</p></Link> : false}
                     {this.displayNavItems()}
                 </FlexContainer>
                 <FlexContainer width="95%">
