@@ -11,8 +11,7 @@ import "./style.sass";
 
 class NavBar extends Component {
     state = {
-        firstName: "",
-        lastName: "",
+        fullName: "",
         email: "",
         password: "",
         loggedIn: false
@@ -26,8 +25,7 @@ class NavBar extends Component {
         API.checkUser().then(response => {
             this.setState({ 
                 loggedIn: true,
-                firstName: response.data.firstName,
-                lastName: response.data.lastName
+                fullName: response.data.fullName
             });
         }).catch(err => {
             this.setState({ loggedIn: false });
@@ -77,7 +75,18 @@ class NavBar extends Component {
                         background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)"
                         white="white"
                         padding="11px 16px"
-                        border="0" />
+                        border="0">
+                        <UserForm submit={this.handleSignUp}>
+                            <label>Full Name</label>
+                            <input className="input-type" type="text" name="fullName" placeholder="Full Name" onChange={this.handleInput} required/>
+                            <label>Email Address</label>
+                            <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
+                            <label>Password</label>
+                            <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
+                            <input className="submit-type" type="submit" value="Sign Up" />
+                            <p>Have an account? Login.</p>
+                        </UserForm>
+                    </MenuButton>
                 </MenuContainer>
             );
         }
