@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { Dropdown } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
-import FlexContainer from "../components/FlexContainer";
-import SubContainer from "../components/SubContainer";
-import DropdownContainer from "../components/DropdownContainer";
+import FlexContainer from "../components/Container/FlexContainer";
+import SubContainer from "../components/Container/SubContainer";
+import DropdownContainer from "../components/Container/DropdownContainer";
+import ResultsContainer from "../components/Container/ResultsContainer";
 import API from "../utils/API.js";
 
 class Main extends Component {
@@ -346,7 +347,9 @@ class Main extends Component {
                             </Dropdown>
                         </DropdownContainer>
                     </FlexContainer>
-                    {this.checkResults()}
+                    <ResultsContainer>
+                        {this.checkResults()}
+                    </ResultsContainer>
                 </SubContainer>
                 <SubContainer display="col-55-w">
                     <Map
