@@ -23,7 +23,7 @@ class NavBar extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.loggedIn !== prevProps.loggedIn) {
             this.setState({
-                loggedIn: true,
+                loggedIn: this.props.loggedIn,
                 fullName: this.props.fullName
             });
         }
