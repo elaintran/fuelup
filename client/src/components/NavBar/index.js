@@ -13,15 +13,11 @@ import "./style.sass";
 
 class NavBar extends Component {
     state = {
-        fullName: "",
+        fullName: this.props.fullName,
         email: "",
         password: "",
-        loggedIn: false,
+        loggedIn: this.props.loggedIn,
         open: false
-    }
-
-    componentDidMount() {
-        this.checkLoginStatus();
     }
 
     checkLoginStatus = () => {
@@ -48,6 +44,21 @@ class NavBar extends Component {
         }).catch(err => console.log(err));
     }
 
+    handleSignUp = event => {
+        event.preventDefault();
+        API.register({
+            fullName: this.state.fullName,
+            email: this.state.email,
+            password: this.state.password
+        }).then(response => this.handleLogin(event));
+    }
+
+    userLogout = () => {
+        API.logout().then(response => {
+            this.setState({ loggedIn: false })
+        });
+    }
+
     openModal = () => this.setState({ open: true });
     closeModal = () => this.setState({ open: false });
 
@@ -55,7 +66,7 @@ class NavBar extends Component {
         if (this.state.loggedIn === true) {
             return (
                 <DropdownContainer>
-                    <Dropdown text={`${this.state.firstName} ${this.state.lastName}`}>
+                    <Dropdown text={this.state.fullName}>
                         <Dropdown.Menu>
                             <Dropdown.Item text="Sign Out" onClick={() => this.userLogout()} />
                         </Dropdown.Menu>

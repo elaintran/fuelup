@@ -9,6 +9,7 @@ import API from "./utils/API.js";
 
 class App extends Component {
     state = {
+        fullName: "",
         loggedIn: false
     }
 
@@ -18,7 +19,10 @@ class App extends Component {
 
     loginStatus = () => {
         API.checkUser().then(response => {
-            this.setState({ loggedIn: true });
+            this.setState({
+                fullName: response.data.fullName,
+                loggedIn: true
+            });
         }).catch(err => {
             this.setState({ loggedIn: false });
         });
@@ -27,7 +31,7 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <NavBar />
+                <NavBar fullName={this.state.fullName} loggedIn={this.state.loggedIn} checkLogin={this.loginStatus} />
                 <Switch>
                     {/* {(this.state.loggedIn === true) ? <Route exact path="/favorites" component={Favorites} /> : false }
                     <Route exact path="/login" component={Login} />

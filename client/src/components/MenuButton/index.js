@@ -1,11 +1,6 @@
 import React from "react";
 import "./style.sass";
 
-const test = props => {
-    const {...rest} = props;
-    console.log({...rest});
-}
-
 function MenuButton(props) {
     return (
         <div className="menu-button"
