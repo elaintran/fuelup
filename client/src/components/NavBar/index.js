@@ -8,6 +8,7 @@ import DropdownContainer from "../DropdownContainer";
 import MenuContainer from "../MenuContainer";
 import MenuButton from "../MenuButton";
 import ButtonContainer from "../ButtonContainer";
+import ErrorMessage from "../ErrorMessage";
 import API from "../../utils/API.js";
 import "./style.sass";
 
@@ -17,6 +18,8 @@ class NavBar extends Component {
         email: "",
         password: "",
         loggedIn: this.props.loggedIn,
+        loginErr: false,
+        signUpErr: false,
         open: false
     }
 
@@ -42,8 +45,14 @@ class NavBar extends Component {
     handleLogin = event => {
         event.preventDefault();
         API.login({email: this.state.email, password: this.state.password}).then(response => {
+            this.setState({
+                loginErr: false,
+                signUpErr: false
+            });
             this.checkLoginStatus();
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            this.setState({ loginErr: true });
+        });
     }
 
     handleSignUp = event => {
@@ -52,7 +61,15 @@ class NavBar extends Component {
             fullName: this.state.fullName,
             email: this.state.email,
             password: this.state.password
-        }).then(response => this.handleLogin(event));
+        }).then(response => {
+            if (response.data === "") {
+                this.setState({ signUpErr: true });
+            } else {
+                this.handleLogin(event);
+            }
+        }).catch(err => {
+            this.setState({ signUpErr: true });
+        });
     }
 
     userLogout = () => {
@@ -85,6 +102,7 @@ class NavBar extends Component {
                             <Modal.Header>Login</Modal.Header>
                             <Modal.Content>
                                 <UserForm submit={this.handleLogin}>
+                                    {(this.state.loginErr === true) ? <ErrorMessage>Invalid password or email.</ErrorMessage> : false}
                                     <label>Email Address</label>
                                     <input className="input-type" type="email" name="email" placeholder="Email" onChange={this.handleInput} required/>
                                     <label>Password</label>
@@ -108,6 +126,7 @@ class NavBar extends Component {
                             <Modal.Header>Sign Up</Modal.Header>
                             <Modal.Content>
                                 <UserForm submit={this.handleSignUp}>
+                                    {(this.state.signUpErr === true) ? <ErrorMessage>This email is already taken.</ErrorMessage> : false}
                                     <label>Full Name</label>
                                     <input className="input-type" type="text" name="fullName" placeholder="Full Name" onChange={this.handleInput} required/>
                                     <label>Email Address</label>
