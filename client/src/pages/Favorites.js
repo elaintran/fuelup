@@ -8,6 +8,8 @@ class Favorites extends Component {
         results: [],
         stations: this.props.station,
         currentCoordinates: "-97.7431,30.2672",
+        locationPlaceholder: "Location",
+        city: [],
         prices: [],
         filterPrices: [],
         userId: this.props.userId,
@@ -46,6 +48,25 @@ class Favorites extends Component {
         });
     }
 
+    checkCity = () => {
+        if (this.state.results.length !== 0) {
+            const city = this.state.results.map(async response => {
+                return API.geocode(response.address).then(response => {
+                    return response.data.features[1].text;
+                });
+            });
+            Promise.all(city).then(response => {
+                let citySet = new Set(response);
+                citySet = [...citySet];
+                this.setState({ city: citySet });
+            });
+        }
+    }
+
+    // filterLocation = location => {
+
+    // }
+
     render() {
         return (
             <Main
@@ -54,8 +75,15 @@ class Favorites extends Component {
                 prices={this.state.prices}
                 userId={this.props.userId}
                 loggedIn={this.props.loggedIn}
-                checkLogin={() => this.checkLoginStatus()}>
-                {console.log(this.props.favorites)}
+                checkLogin={() => this.checkLoginStatus()}
+                locationPlaceholder={this.state.locationPlaceholder}
+                margin={{ marginRight: "auto" }}>
+                {/* <Dropdown text={this.state.locationPlaceholder}>
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="Location" />
+                        {this.state.city.map((city, index) => <Dropdown.Item text={city} onClick={() => this.filterLocation(city)} key={index} />)}
+                    </Dropdown.Menu>
+                </Dropdown> */}
             </Main>
         );
     }

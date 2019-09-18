@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Modal } from "semantic-ui-react";
+import { Modal, Dropdown } from "semantic-ui-react";
 import { Link } from "react-router-dom"; 
-import { Dropdown } from "semantic-ui-react";
 import UserForm from "../UserForm";
 import FlexContainer from "../Container/FlexContainer";
 import DropdownContainer from "../Container/DropdownContainer";
@@ -76,6 +75,10 @@ class NavBar extends Component {
     userLogout = () => {
         API.logout().then(response => {
             this.checkLoginStatus();
+            this.setState({
+                loginOpen: false,
+                signUpOpen: false
+            })
         });
     }
 
@@ -97,9 +100,11 @@ class NavBar extends Component {
     displayNavItems = () => {
         if (this.state.loggedIn === true) {
             return (
-                <DropdownContainer>
+                <DropdownContainer margin={{ marginLeft: "auto" }}>
                     <Dropdown text={this.state.fullName}>
                         <Dropdown.Menu>
+                            <Dropdown.Item as={Link} to="/favorites" text="Favorites" />
+                            <Dropdown.Item as={Link} to="/budget" text="Budget" />
                             <Dropdown.Item text="Sign Out" onClick={() => this.userLogout()} />
                         </Dropdown.Menu>
                     </Dropdown>
@@ -168,7 +173,6 @@ class NavBar extends Component {
         return (
             <FlexContainer>
                 <p>Home</p>
-                {(this.state.loggedIn === true) ? <Link to="/favorites"><p>Favorites</p></Link> : false}
                 {this.displayNavItems()}
             </FlexContainer>
         );

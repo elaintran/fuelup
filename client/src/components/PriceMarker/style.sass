@@ -1,11 +1,12 @@
-$orange: rgba(255,119,93,1)
-$orange-gradient: linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)
+$darkblue: #5393fe
+$lightblue: #5c99ff
+$blue-gradient: linear-gradient(0deg, $darkblue 0%, $lightblue 100%)
 
 .price-marker
     display: flex
     align-items: center
     justify-content: center
-    background: $orange-gradient
+    background: $blue-gradient
     color: white
     font-weight: 600
     padding: 5px 10px
@@ -19,7 +20,7 @@ $orange-gradient: linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1
         bottom: -5px
         border-right: 5px solid transparent
         border-left: 5px solid transparent
-        border-top: 5px solid $orange
+        border-top: 5px solid $lightblue
 
 .fa-tag
     margin-right: 5px

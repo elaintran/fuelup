@@ -99,7 +99,8 @@ class Home extends Component {
                 userId={this.props.userId}
                 loggedIn={this.props.loggedIn}
                 favorites={this.state.favorites}
-                checkLogin={() => this.checkLoginStatus()}>
+                checkLogin={() => this.checkLoginStatus()}
+                margin={{ marginLeft: "auto" }}>
                 <SearchBar
                     change={this.handleInput}
                     submit={this.handleSubmit} />

@@ -28,9 +28,9 @@ function Results(props) {
                 </div>
                 <div className="fuel-info">
                     <div className="grade-container">
-                        {props.gasType.map(fuel => {
+                        {props.gasType.map((fuel, index) => {
                             return (
-                                <div className="grade">
+                                <div className="grade" key={index}>
                                     <p>{fuel.type}</p>
                                     {(fuel.price === "- - -") ? <h5>{fuel.price}</h5> : <h5>{fuel.price}<span className="units">/gal</span></h5>}
                                     <p className="update-time">{fuel.lastUpdated}</p>
@@ -39,6 +39,7 @@ function Results(props) {
                         })}
                     </div>
                 </div>
+                {props.children}
             </div>
         </div>
     );

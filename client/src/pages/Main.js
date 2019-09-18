@@ -6,6 +6,7 @@ import FlexContainer from "../components/Container/FlexContainer";
 import SubContainer from "../components/Container/SubContainer";
 import DropdownContainer from "../components/Container/DropdownContainer";
 import ResultsContainer from "../components/Container/ResultsContainer";
+import Button from "../components/Button";
 import API from "../utils/API.js";
 
 class Main extends Component {
@@ -97,7 +98,6 @@ class Main extends Component {
 
     //Adjust map zoom according to gas station clicked and zooms into selected point
     handleCenter = index => {
-        // API.directions(this.state.currentCoordinates, `${this.state.coordinates[index].longitude},${this.state.coordinates[index].latitude}`).then(response => console.log(response));
         this.setState({
             center: {
                 longitude: this.state.coordinates[index].longitude,
@@ -147,7 +147,7 @@ class Main extends Component {
             //Convert the brand objects into an array
             stationSet = [...stationSet];
             //Map out the brand array and return a list of dropdown items consisting of unique brands
-            return stationSet.map(station => <Dropdown.Item text={station} onClick={() => this.filterBrand(station)} />);
+            return stationSet.map((station, index) => <Dropdown.Item text={station} onClick={() => this.filterBrand(station)} key={index} />);
         }
     }
 
@@ -318,7 +318,11 @@ class Main extends Component {
                 unfavorite={this.removeFavorites}
                 saved={saved}
                 favoriteId={favoriteId}
-            />
+            >
+                <Button address={results.address}>
+                    Get Directions
+                </Button>
+            </Results>
         );
     }
 
@@ -328,7 +332,7 @@ class Main extends Component {
                 <SubContainer display="col-45-w">
                     <FlexContainer display="col-100-w">
                         {this.props.children}
-                        <DropdownContainer>
+                        <DropdownContainer margin={this.props.margin}>
                             <Dropdown text={this.state.fuelPlaceholder}>
                                 <Dropdown.Menu>
                                     <Dropdown.Item text="Fuel Type" onClick={() => this.filterFuel("Fuel Type")} />
