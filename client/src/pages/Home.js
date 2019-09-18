@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import { Dropdown } from "semantic-ui-react";
-import Map from "../components/Map";
-import Results from "../components/Results";
 import SearchBar from "../components/SearchBar";
-import FlexContainer from "../components/FlexContainer";
-import SubContainer from "../components/SubContainer";
-import DropdownContainer from "../components/DropdownContainer";
 import Main from "./Main.js";
 import API from "../utils/API.js";
 
@@ -35,8 +29,8 @@ class Home extends Component {
                 this.setState({ loggedIn: this.props.loggedIn });
             }
         }
-        if (this.props.station !== prevProps.station) {
-            this.setState({ stations: this.props.station });
+        if (this.props.favorites !== prevProps.favorites) {
+            this.setState({ favorites: this.props.favorites });
         }
     }
 
@@ -104,7 +98,7 @@ class Home extends Component {
                 prices={this.state.prices}
                 userId={this.props.userId}
                 loggedIn={this.props.loggedIn}
-                stations={this.state.stations}
+                favorites={this.state.favorites}
                 checkLogin={() => this.checkLoginStatus()}>
                 <SearchBar
                     change={this.handleInput}

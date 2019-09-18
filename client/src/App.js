@@ -10,6 +10,7 @@ class App extends Component {
         userId: "",
         fullName: "",
         station: [],
+        favorites: [],
         loggedIn: false
     }
 
@@ -22,29 +23,47 @@ class App extends Component {
             this.setState({
                 userId: response.data._id,
                 fullName: response.data.fullName,
-                station: response.data.station,
                 loggedIn: true
-            });
+            }, () => this.getFavorites(response.data.station));
         }).catch(err => {
             this.setState({ loggedIn: false });
+        });
+    }
+
+    getFavorites = response => {
+        const getStation = response.map(async station => {
+            return API.getStation(station).then(response => response.data); 
+        });
+        Promise.all(getStation).then(data => {
+            this.setState({ favorites: data });
         });
     }
 
     render() {
         return (
             <Router>
-                <NavBar fullName={this.state.fullName} loggedIn={this.state.loggedIn} checkLogin={() => this.loginStatus()} />
-                <Switch>
+                <NavBar
+                    fullName={this.state.fullName}
+                    loggedIn={this.state.loggedIn}
+                    favorites={this.state.favorites}
+                    checkLogin={() => this.loginStatus()} />
+                {/* <Switch>
                     {(this.state.loggedIn === true) ?
                         <Route exact
                             path="/favorites"
-                            render={(props) => <Favorites />} /> : false }
+                            render={(props) =>
+                                <Favorites
+                                    userId={this.state.userId}
+                                    loggedIn={this.state.loggedIn}
+                                    favorites={this.state.favorites}
+                                    checkLogin={() => this.loginStatus()} />}
+                            /> : false }
                     <Route render={(props) => <Home
                         userId={this.state.userId}
-                        station={this.state.station}
                         loggedIn={this.state.loggedIn}
+                        favorites={this.state.favorites}
                         checkLogin={() => this.loginStatus()} />} />
-                </Switch>
+                </Switch> */}
             </Router>
         );
     }

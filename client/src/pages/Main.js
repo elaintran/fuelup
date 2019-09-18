@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Dropdown } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
-import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
 import DropdownContainer from "../components/DropdownContainer";
@@ -15,7 +14,6 @@ class Main extends Component {
         filterResults: [],
         filter: false,
         prices: this.props.prices,
-        favorites: [],
         brandPlaceholder: "Brand",
         fuelPlaceholder: "Fuel Type",
         coordinates: [],
@@ -41,10 +39,10 @@ class Main extends Component {
             this.setState({
                 userId: this.props.userId,
                 loggedIn: this.props.loggedIn
-            }, () => this.getFavorites(this.props.stations));
+            });
         }
-        if (this.props.stations !== prevProps.stations) {
-            this.getFavorites(this.props.stations);
+        if (this.props.favorites !== prevProps.favorites) {
+            this.props.checkLogin();
         }
     }
 
@@ -108,15 +106,6 @@ class Main extends Component {
         });
     }
 
-    getFavorites = response => {
-        const getStation = response.map(async station => {
-            return API.getStation(station).then(response => response.data); 
-        });
-        Promise.all(getStation).then(data => {
-            this.setState({ favorites: data });
-        });
-    }
-
     addFavorites = (station, address, link, logo, index) => {
         API.favorite({
             station: station,
@@ -129,8 +118,6 @@ class Main extends Component {
     }
 
     removeFavorites = id => {
-        console.log(this.state.userId);
-        console.log(id);
         API.unfavorite(this.state.userId, id).then(response => this.props.checkLogin());
     }
 
