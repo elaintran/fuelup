@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home.js";
-import Register from "./pages/Register.js";
-import Login from "./pages/Login.js";
 import Favorites from "./pages/Favorites.js";
 import NavBar from "./components/NavBar";
 import API from "./utils/API.js";
@@ -37,7 +35,10 @@ class App extends Component {
             <Router>
                 <NavBar fullName={this.state.fullName} loggedIn={this.state.loggedIn} checkLogin={() => this.loginStatus()} />
                 <Switch>
-                    {(this.state.loggedIn === true) ? <Route exact path="/favorites" component={Favorites} /> : false }
+                    {(this.state.loggedIn === true) ?
+                        <Route exact
+                            path="/favorites"
+                            render={(props) => <Favorites />} /> : false }
                     <Route render={(props) => <Home
                         userId={this.state.userId}
                         station={this.state.station}

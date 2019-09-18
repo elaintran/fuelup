@@ -405,7 +405,6 @@ class Home extends Component {
                             <SearchBar
                                 change={this.handleInput}
                                 submit={this.handleSubmit}
-                                value={this.state.searchValue}
                             />
                             <DropdownContainer>
                                 <Dropdown text={this.state.fuelPlaceholder}>

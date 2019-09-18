@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom"; 
 import { Dropdown } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
@@ -7,13 +6,10 @@ import SearchBar from "../components/SearchBar";
 import FlexContainer from "../components/FlexContainer";
 import SubContainer from "../components/SubContainer";
 import DropdownContainer from "../components/DropdownContainer";
-import MenuContainer from "../components/MenuContainer";
-import MenuButton from "../components/MenuButton";
 import API from "../utils/API.js";
 
 class Favorites extends Component {
     state = {
-        query: "",
         results: [],
         filterResults: [],
         coordinates: [],
@@ -31,7 +27,6 @@ class Favorites extends Component {
         search: false,
         filter: false,
         loggedIn: false,
-        username: "",
         userId: ""
     }
 
@@ -61,33 +56,6 @@ class Favorites extends Component {
         });
     }
 
-    userLogout = () => {
-        API.logout().then(response => {
-            this.setState({ loggedIn: false })
-        });
-    }
-
-    displayNavItems = () => {
-        if (this.state.loggedIn === true) {
-            return (
-                <DropdownContainer>
-                    <Dropdown text={this.state.username}>
-                        <Dropdown.Menu>
-                            <Dropdown.Item text="Sign Out" onClick={() => this.userLogout()} />
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </DropdownContainer>
-            );
-        } else {
-            return (
-                <MenuContainer>
-                    <MenuButton link="login" name="Login" />
-                    <MenuButton link="register" name="Sign Up" padding="10px" background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)" />
-                </MenuContainer>
-            );
-        }
-    }
-
     getGeolocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(this.showPosition);
@@ -104,18 +72,6 @@ class Favorites extends Component {
                 // this.searchFavorites(response.data.features[2].text);
                 this.setState({ currentCoordinates: `${position.coords.longitude},${position.coords.latitude}`});
             });
-    }
-
-    //Handles city and zipcode search input
-    handleInput = event => {
-        let value = event.target.value;
-        this.setState({ query: value });
-    }
-
-    //Handles search submission and calls GasBuddy API function
-    handleSubmit = event => {
-        event.preventDefault();
-        this.searchFavorites(this.state.query);
     }
 
     //Adjust map zoom according to gas station clicked and zooms into selected point
@@ -406,12 +362,6 @@ class Favorites extends Component {
     render() {
         return (
             <div>
-                <FlexContainer width="95%">
-                    {/* {console.log(this.state.results)} */}
-                    <p>Home</p>
-                    {(this.state.loggedIn === true) ? <Link to="/favorites"><p>Favorites</p></Link> : false}
-                    {this.displayNavItems()}
-                </FlexContainer>
                 <FlexContainer width="95%">
                     <SubContainer width="45%">
                         <FlexContainer>
