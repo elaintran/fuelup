@@ -20,15 +20,17 @@ class NavBar extends Component {
         open: false
     }
 
-    checkLoginStatus = () => {
-        API.checkUser().then(response => {
-            this.setState({ 
+    componentDidUpdate(prevProps) {
+        if (this.props.loggedIn !== prevProps.loggedIn) {
+            this.setState({
                 loggedIn: true,
-                fullName: response.data.fullName
+                fullName: this.props.fullName
             });
-        }).catch(err => {
-            this.setState({ loggedIn: false });
-        });
+        }
+    }
+
+    checkLoginStatus = () => {
+        this.props.checkLogin();
     }
 
     handleInput = event => {
@@ -55,7 +57,7 @@ class NavBar extends Component {
 
     userLogout = () => {
         API.logout().then(response => {
-            this.setState({ loggedIn: false })
+            this.checkLoginStatus();
         });
     }
 

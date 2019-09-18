@@ -9,7 +9,9 @@ import API from "./utils/API.js";
 
 class App extends Component {
     state = {
+        userId: "",
         fullName: "",
+        station: [],
         loggedIn: false
     }
 
@@ -20,7 +22,9 @@ class App extends Component {
     loginStatus = () => {
         API.checkUser().then(response => {
             this.setState({
+                userId: response.data._id,
                 fullName: response.data.fullName,
+                station: response.data.station,
                 loggedIn: true
             });
         }).catch(err => {
@@ -31,12 +35,14 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <NavBar fullName={this.state.fullName} loggedIn={this.state.loggedIn} checkLogin={this.loginStatus} />
+                <NavBar fullName={this.state.fullName} loggedIn={this.state.loggedIn} checkLogin={() => this.loginStatus()} />
                 <Switch>
-                    {/* {(this.state.loggedIn === true) ? <Route exact path="/favorites" component={Favorites} /> : false }
-                    <Route exact path="/login" component={Login} />
-                    <Route exact path="/register" component={Register} />
-                    <Route component={Home} /> */}
+                    {(this.state.loggedIn === true) ? <Route exact path="/favorites" component={Favorites} /> : false }
+                    <Route render={(props) => <Home
+                        userId={this.state.userId}
+                        station={this.state.station}
+                        loggedIn={this.state.loggedIn}
+                        checkLogin={() => this.loginStatus()} />} />
                 </Switch>
             </Router>
         );

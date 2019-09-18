@@ -28,23 +28,29 @@ class Home extends Component {
         zoom: 12,
         search: false,
         filter: false,
-        userId: "",
-        loggedIn: false
+        userId: this.props.userId,
+        loggedIn: this.props.loggedIn
     }
 
     componentDidMount() {
         this.getGeolocation();
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.loggedIn !== prevProps.loggedIn) {
+            if (this.props.loggedIn === true) {
+                this.setState({
+                    userId: this.props.userId,
+                    loggedIn: this.props.loggedIn
+                }, this.getFavorites(this.props.station));
+            } else {
+                this.setState({ loggedIn: false });
+            }
+        }
+    }
+
     checkLoginStatus = () => {
-        API.checkUser().then(response => {
-            this.setState({ 
-                loggedIn: true,
-                userId: response.data._id
-            }, this.getFavorites(response.data.station));
-        }).catch(err => {
-            this.setState({ loggedIn: false });
-        });
+        this.props.checkLogin();
     }
 
     getFavorites = response => {
@@ -53,12 +59,6 @@ class Home extends Component {
         });
         Promise.all(getStation).then(data => {
             this.setState({ favorites: data });
-        });
-    }
-
-    userLogout = () => {
-        API.logout().then(response => {
-            this.setState({ loggedIn: false })
         });
     }
 
