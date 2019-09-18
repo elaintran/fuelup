@@ -20,7 +20,8 @@ class NavBar extends Component {
         loggedIn: this.props.loggedIn,
         loginErr: false,
         signUpErr: false,
-        open: false
+        loginOpen: false,
+        signUpOpen: false
     }
 
     componentDidUpdate(prevProps) {
@@ -78,8 +79,20 @@ class NavBar extends Component {
         });
     }
 
-    openModal = () => this.setState({ open: true });
-    closeModal = () => this.setState({ open: false });
+    openLogin = () => {
+        this.setState({
+            loginOpen: true,
+            signUpOpen: false
+        });
+    };
+    closeLogin = () => this.setState({ loginOpen: false });
+    openSignUp = () => {
+        this.setState({
+            loginOpen: false,
+            signUpOpen: true
+        });
+    };
+    closeSignUp = () => this.setState({ signUpOpen: false });
 
     displayNavItems = () => {
         if (this.state.loggedIn === true) {
@@ -96,10 +109,14 @@ class NavBar extends Component {
             return (
                 <MenuContainer>
                     <ButtonContainer>
-                        <Modal trigger={
+                        <Modal
+                            open={this.state.loginOpen}
+                            onClose={this.closeLogin}
+                            trigger={
                                 <MenuButton
                                     name="Login"
-                                    buttontype="open-button" />
+                                    buttontype="open-button"
+                                    onClick={this.openLogin} />
                             }>
                             <Modal.Header>Login</Modal.Header>
                             <Modal.Content>
@@ -110,17 +127,21 @@ class NavBar extends Component {
                                     <label>Password</label>
                                     <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
                                     <input className="submit-type" type="submit" value="Login" />
-                                    <p>Don't have an account? Sign up.</p>
+                                    <p>Don't have an account? <span onClick={this.openSignUp}>Sign up.</span></p>
                                 </UserForm>
                             </Modal.Content>
                         </Modal>
                     </ButtonContainer>
                     <ButtonContainer>
-                        <Modal trigger={
-                            <MenuButton
-                                name="Sign Up"
-                                buttontype="filled-button"
-                                />
+                        <Modal
+                            open={this.state.signUpOpen}
+                            onClose={this.closeSignUp}
+                            trigger={
+                                <MenuButton
+                                    name="Sign Up"
+                                    buttontype="filled-button"
+                                    onClick={this.openSignUp}
+                                    />
                             }>
                             <Modal.Header>Sign Up</Modal.Header>
                             <Modal.Content>
@@ -133,7 +154,7 @@ class NavBar extends Component {
                                     <label>Password</label>
                                     <input className="input-type" type="password" name="password" placeholder="Password" onChange={this.handleInput} required />
                                     <input className="submit-type" type="submit" value="Sign Up" />
-                                    <p>Have an account? Login.</p>
+                                    <p>Have an account? <span onClick={this.openLogin}>Login.</span></p>
                                 </UserForm>
                             </Modal.Content>
                         </Modal>
