@@ -14,37 +14,14 @@ class Favorites extends Component {
         loggedIn: this.props.loggedIn
     }
 
-    componentDidMount() {
-        // this.getGeolocation();
-        this.searchFavorites(this.props.favorites);
-    }
-
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.favorites !== prevProps.favorites) {
-    //         console.log(this.props.favorites);
-    //     }
-    // }
-
-    checkLoginStatus = () => {
-        this.props.checkLogin();
-    }
-
-    getGeolocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.showPosition);
-        } else {
-            console.log("no favorites");
-            // this.searchGas("78753");
+    componentDidUpdate(prevProps) {
+        if (this.props.favorites !== prevProps.favorites) {
+            this.searchFavorites(this.props.favorites);
         }
     }
 
-    showPosition = position => {
-        API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
-            .then(response => {
-                // console.log(response.data.features[2].text);
-                // this.searchFavorites(response.data.features[2].text);
-                this.setState({ currentCoordinates: `${position.coords.longitude},${position.coords.latitude}`});
-            });
+    checkLoginStatus = () => {
+        this.props.checkLogin();
     }
 
     //Sends query to the GasBuddy scraper
@@ -73,11 +50,12 @@ class Favorites extends Component {
         return (
             <Main
                 results={this.state.results}
+                favorites={this.state.results}
                 prices={this.state.prices}
                 userId={this.props.userId}
                 loggedIn={this.props.loggedIn}
-                favorites={this.props.favorites}
                 checkLogin={() => this.checkLoginStatus()}>
+                {console.log(this.props.favorites)}
             </Main>
         );
     }

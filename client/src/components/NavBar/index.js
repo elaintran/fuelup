@@ -97,7 +97,9 @@ class NavBar extends Component {
                 <MenuContainer>
                     <ButtonContainer>
                         <Modal trigger={
-                                <MenuButton link="login" name="Login" />
+                                <MenuButton
+                                    name="Login"
+                                    buttontype="open-button" />
                             }>
                             <Modal.Header>Login</Modal.Header>
                             <Modal.Content>
@@ -116,12 +118,9 @@ class NavBar extends Component {
                     <ButtonContainer>
                         <Modal trigger={
                             <MenuButton
-                                link="/register"
                                 name="Sign Up"
-                                background="linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1) 100%)"
-                                white="white"
-                                padding="11px 16px"
-                                border="0"/>
+                                buttontype="filled-button"
+                                />
                             }>
                             <Modal.Header>Sign Up</Modal.Header>
                             <Modal.Content>
@@ -146,7 +145,7 @@ class NavBar extends Component {
 
     render() {
         return (
-            <FlexContainer width="95%">
+            <FlexContainer>
                 <p>Home</p>
                 {(this.state.loggedIn === true) ? <Link to="/favorites"><p>Favorites</p></Link> : false}
                 {this.displayNavItems()}

@@ -3,7 +3,7 @@ import "./style.sass";
 
 function FlexContainer(props) {
     return (
-        <div className="main-container" style={{ width: props.width || "100%" }}>
+        <div className={`main-container ${props.display || ""}`}>
             {props.children}
         </div>
     );

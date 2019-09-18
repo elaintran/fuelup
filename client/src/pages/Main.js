@@ -10,7 +10,7 @@ import API from "../utils/API.js";
 class Main extends Component {
     state = {
         results: this.props.results,
-        favorites: this.props.favorites,
+        favorites: [],
         filterResults: [],
         filter: false,
         prices: this.props.prices,
@@ -42,7 +42,7 @@ class Main extends Component {
             });
         }
         if (this.props.favorites !== prevProps.favorites) {
-            this.props.checkLogin();
+            this.setState({ favorites: this.props.favorites });
         }
     }
 
@@ -323,9 +323,9 @@ class Main extends Component {
 
     render() {
         return (
-            <FlexContainer width="95%">
-                <SubContainer width="45%">
-                    <FlexContainer>
+            <FlexContainer display="display-group">
+                <SubContainer display="col-45-w">
+                    <FlexContainer display="col-100-w">
                         {this.props.children}
                         <DropdownContainer>
                             <Dropdown text={this.state.fuelPlaceholder}>
@@ -348,7 +348,7 @@ class Main extends Component {
                     </FlexContainer>
                     {this.checkResults()}
                 </SubContainer>
-                <SubContainer width="55%">
+                <SubContainer display="col-55-w">
                     <Map
                         coordinates={this.state.coordinates}
                         center={this.state.center}

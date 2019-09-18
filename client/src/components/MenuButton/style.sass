@@ -4,12 +4,22 @@ $orange-gradient: linear-gradient(0deg, rgba(255,119,93,1) 0%, rgba(255,136,94,1
 .menu-button
     font-weight: 600
     font-size: 14px
-    border: 2px solid $orange
     border-radius: 2px
+    &:hover
+        cursor: pointer
+        opacity: 0.9
+
+.open-button
     color: $orange
+    border: 2px solid $orange
+    padding: 9px 14px
     &:hover
         background: $orange-gradient
         color: white
-        opacity: 0.9
-        transition: 500ms
-        cursor: pointer
+        border: 0
+        padding: 11px 16px
+
+.filled-button
+    background: $orange-gradient
+    color: white
+    padding: 11px 16px
