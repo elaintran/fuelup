@@ -25,6 +25,7 @@ class Main extends Component {
             latitude: "30.2672"
         },
         zoom: 12,
+        resultClicked: "",
         distance: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn
@@ -34,7 +35,8 @@ class Main extends Component {
         if (this.props.results !== prevProps.results) {
             this.setState({
                 results: this.props.results,
-                prices: this.props.prices
+                prices: this.props.prices,
+                resultClicked: ""
             }, () => this.convertAddress());
         }
         if (this.props.loggedIn !== prevProps.loggedIn) {
@@ -103,8 +105,9 @@ class Main extends Component {
                 longitude: this.state.coordinates[index].longitude,
                 latitude: this.state.coordinates[index].latitude 
             },
-            zoom: 13
-        });
+            zoom: 13,
+            resultClicked: index
+        }, () => this.checkResults());
     }
 
     addFavorites = (station, address, link, logo, index) => {
@@ -183,7 +186,8 @@ class Main extends Component {
             filterPrices: filterPrices,
             fuelPlaceholder: fuel,
             zoom: 12,
-            filter: filter
+            filter: filter,
+            resultClicked: ""
         }, () => this.convertAddress());
     }
 
@@ -225,7 +229,8 @@ class Main extends Component {
             filterPrices: filterPrices,
             brandPlaceholder: brand,
             zoom: 12,
-            filter: filter
+            filter: filter,
+            resultClicked: ""
         }, () => this.convertAddress());
     }
 
@@ -319,9 +324,10 @@ class Main extends Component {
                 saved={saved}
                 favoriteId={favoriteId}
             >
-                <Button address={results.address}>
-                    Get Directions
-                </Button>
+                {(this.state.resultClicked === index) ? 
+                    <Button address={results.address}>
+                        Get Directions
+                    </Button> : false}
             </Results>
         );
     }
