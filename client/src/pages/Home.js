@@ -16,8 +16,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        // this.getGeolocation();
-        this.searchGas("32003");
+        this.getGeolocation();
     }
 
     componentDidUpdate(prevProps) {
@@ -41,15 +40,13 @@ class Home extends Component {
     }
 
     getGeolocation = () => {
-        var timeout = setTimeout(this.searchGas("78753"), 10000);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(this.showPosition, err => {
-
-                // clearTimeout(timeout);
-                // this.searchGas("78753");
+                console.log(err);
+                this.searchGas("78753");
             }, {timeout: 10000});
         } else {
-            // this.searchGas("78753");
+            this.searchGas("78753");
         }
     }
 

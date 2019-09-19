@@ -28,7 +28,7 @@ class Main extends Component {
         zoom: 12,
         resultClicked: "",
         displayFavorites: false,
-        distance: [],
+        // distance: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
         resultError: this.props.resultError
@@ -69,25 +69,25 @@ class Main extends Component {
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
-            const milesArr = response.map(async coordinates => {
-                return API.directions(this.state.currentCoordinates, `${coordinates.longitude},${coordinates.latitude}`).then(response => {
-                    const meters = response.data.routes[0].distance;
-                    const miles = (meters * 0.000621371).toFixed(1);
-                    return miles;
-                })
-            })
-            Promise.all(milesArr).then(data => {
+            // const milesArr = response.map(async coordinates => {
+            //     return API.directions(this.state.currentCoordinates, `${coordinates.longitude},${coordinates.latitude}`).then(response => {
+            //         const meters = response.data.routes[0].distance;
+            //         const miles = (meters * 0.000621371).toFixed(1);
+            //         return miles;
+            //     })
+            // })
+            // Promise.all(milesArr).then(data => {
                 //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
                 if (response.length !== 0) {
                     this.setState({
                         coordinates: response,
                         center: response[0],
-                        distance: data
+                        // distance: data
                     });
                 } else {
                     this.setState({ coordinates: [] });
                 }
-            })
+            // })
         }).catch(err => {
             console.log(err);
         });
@@ -97,6 +97,10 @@ class Main extends Component {
         if (this.state.favorites.length === 0 && this.state.results.length === 0) {
             this.setState({
                 displayFavorites: true
+            });
+        } else {
+            this.setState({
+                displayFavorites: false
             });
         }
     }
@@ -155,7 +159,7 @@ class Main extends Component {
                 }
             }
         } else {
-            if (this.state.resultError === "" || this.state.resultError === undefined) {
+            if (this.state.resultError === "" || this.state.resultError === undefined && this.state.displayFavorites !== true) {
                 return (
                     <Segment>
                         <Dimmer active inverted>
@@ -164,9 +168,9 @@ class Main extends Component {
                     </Segment>
                 );
             } else {
-                if (this.state.favorites.length !== 0 && this.state.results.length !== 0) {
+                // if (this.state.favorites.length !== 0 && this.state.results.length !== 0) {
                     return <NoResultsMessage>{this.state.resultError}</NoResultsMessage>;
-                }
+                // }
             }
         }
     }
@@ -346,7 +350,7 @@ class Main extends Component {
                 address={results.address}
                 gasType={results.gasType}
                 link={results.link}
-                distance={this.state.distance[index]}
+                // distance={this.state.distance[index]}
                 id={index}
                 key={index}
                 click={this.handleCenter}

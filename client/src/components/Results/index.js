@@ -11,7 +11,7 @@ function Results(props) {
                     <div className="gas-info">
                         <h4>{props.station}</h4>
                         <div className="location">
-                            <i className="fas fa-map-marker-alt"></i><p>{props.address} &#183; {props.distance} mi</p>
+                            <i className="fas fa-map-marker-alt"></i><p>{props.address}{/*&#183; {props.distance} mi*/}</p>
                         </div>
                     </div>
                     {(props.loggedIn === true) ?

@@ -113,7 +113,7 @@ class NavBar extends Component {
         if (this.state.loggedIn === true) {
             return (
                 <DropdownContainer margin={{ marginLeft: "auto" }}>
-                    <Dropdown text={this.state.fullName}>
+                    <Dropdown text={this.state.fullName} style={{ margin: 0 }}>
                         <Dropdown.Menu>
                             <Dropdown.Item as={Link} to="/favorites" text="Favorites" />
                             <Dropdown.Item as={Link} to="/budget" text="Budget" />
