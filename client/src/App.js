@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home.js";
 import Favorites from "./pages/Favorites.js";
+import Budget from "./pages/Budget.js";
 import NavBar from "./components/NavBar";
 import API from "./utils/API.js";
 
@@ -58,6 +59,7 @@ class App extends Component {
                                     favorites={this.state.favorites}
                                     checkLogin={() => this.loginStatus()} />}
                             /> : false }
+                    {this.state.loggedIn === true ? <Route exact path="/budget" component={Budget} />: false}
                     <Route render={(props) => <Home
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}

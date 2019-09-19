@@ -15,7 +15,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        this.getGeolocation();
+        // this.getGeolocation();
     }
 
     componentDidUpdate(prevProps) {
