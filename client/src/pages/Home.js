@@ -8,7 +8,6 @@ class Home extends Component {
         query: "",
         results: [],
         stations: this.props.station,
-        currentCoordinates: "-97.7431,30.2672",
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
@@ -54,7 +53,6 @@ class Home extends Component {
         API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
             .then(response => {
                 this.searchGas(response.data.features[2].text);
-                this.setState({ currentCoordinates: `${position.coords.longitude},${position.coords.latitude}`});
             });
     }
 
@@ -75,6 +73,7 @@ class Home extends Component {
     searchGas = query => {
         API.findGas(query)
             .then(response => {
+                console.log(response.data);
                 //Return prices of Regular fuel type to display on map
                 const prices = response.data.map(prices => {
                     return prices.gasType[0].price

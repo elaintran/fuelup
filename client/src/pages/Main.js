@@ -39,7 +39,9 @@ class Main extends Component {
             this.setState({
                 results: this.props.results,
                 prices: this.props.prices,
-                resultClicked: ""
+                resultClicked: "",
+                brandPlaceholder: "Brand",
+                fuelPlaceholder: "Fuel Type"
             }, () => this.convertAddress());
         }
         if (this.props.loggedIn !== prevProps.loggedIn) {
@@ -180,7 +182,7 @@ class Main extends Component {
         //If search yields returning results
         if (this.state.results.length !== 0) {
             //Map out all of the gas stations from the results
-            const station = this.state.results.map(station => station.station);
+            const station = this.state.results.map(station => station.station.trim());
             //Filter out duplicate brands and return unique brands in an object format
             let stationSet = new Set(station);
             //Convert the brand objects into an array
@@ -401,7 +403,6 @@ class Main extends Component {
                     <Map
                         coordinates={this.state.coordinates}
                         center={this.state.center}
-                        search={this.state.search}
                         price={this.state.prices}
                         filterPrice={this.state.filterPrices}
                         zoom={this.state.zoom}
