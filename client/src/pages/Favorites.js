@@ -7,12 +7,9 @@ import API from "../utils/API.js";
 class Favorites extends Component {
     state = {
         results: [],
-        stations: this.props.station,
-        currentCoordinates: "-97.7431,30.2672",
         locationPlaceholder: "Location",
         city: [],
         prices: [],
-        filterPrices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn
     }
@@ -20,6 +17,9 @@ class Favorites extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.favorites !== prevProps.favorites) {
             this.searchFavorites(this.props.favorites);
+        }
+        if (this.props.favorites === undefined) {
+            this.props.checkLogin();
         }
     }
 
@@ -67,6 +67,7 @@ class Favorites extends Component {
     // filterLocation = location => {
 
     // }
+
     checkFavorites = () => {
         if (this.state.results.length === 0) {
             return <NoResultsMessage>No favorites added.</NoResultsMessage>;

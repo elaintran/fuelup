@@ -7,7 +7,6 @@ class Home extends Component {
     state = {
         query: "",
         results: [],
-        stations: this.props.station,
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
@@ -16,6 +15,7 @@ class Home extends Component {
 
     componentDidMount() {
         // this.getGeolocation();
+        this.searchGas("78666");
     }
 
     componentDidUpdate(prevProps) {
@@ -73,7 +73,6 @@ class Home extends Component {
     searchGas = query => {
         API.findGas(query)
             .then(response => {
-                console.log(response.data);
                 //Return prices of Regular fuel type to display on map
                 const prices = response.data.map(prices => {
                     return prices.gasType[0].price

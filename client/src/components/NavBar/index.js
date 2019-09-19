@@ -112,7 +112,7 @@ class NavBar extends Component {
     displayNavItems = () => {
         if (this.state.loggedIn === true) {
             return (
-                <DropdownContainer margin={{ marginLeft: "auto" }}>
+                <DropdownContainer display="username">
                     <Dropdown text={this.state.fullName} style={{ margin: 0 }}>
                         <Dropdown.Menu>
                             <Dropdown.Item as={Link} to="/favorites" text="Favorites" />

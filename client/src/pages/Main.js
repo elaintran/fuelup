@@ -375,7 +375,7 @@ class Main extends Component {
                 <SubContainer display="col-45-w">
                     <FlexContainer display="col-100-w">
                         {this.props.children}
-                        <DropdownContainer margin={this.props.margin}>
+                        <DropdownContainer display="filter">
                             <Dropdown text={this.state.fuelPlaceholder}>
                                 <Dropdown.Menu>
                                     <Dropdown.Item text="Fuel Type" onClick={() => this.filterFuel("Fuel Type")} />

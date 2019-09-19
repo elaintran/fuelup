@@ -3,7 +3,7 @@ import "./style.sass";
 
 function DropdownContainer(props) {
     return (
-        <div className="dropdown-container" style={props.margin}>
+        <div className={`dropdown-container ${props.display}`}>
             {props.children}
         </div>
     );
