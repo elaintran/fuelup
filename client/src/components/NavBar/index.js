@@ -116,7 +116,7 @@ class NavBar extends Component {
                     <Dropdown text={this.state.fullName} style={{ margin: 0 }}>
                         <Dropdown.Menu>
                             <Dropdown.Item as={Link} to="/favorites" text="Favorites" />
-                            {/* <Dropdown.Item as={Link} to="/budget" text="Budget" /> */}
+                            <Dropdown.Item as={Link} to="/expenses" text="Expenses" />
                             <Dropdown.Item text="Sign Out" onClick={() => this.userLogout()} />
                         </Dropdown.Menu>
                     </Dropdown>

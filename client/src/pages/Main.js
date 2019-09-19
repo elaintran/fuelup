@@ -376,7 +376,6 @@ class Main extends Component {
     render() {
         return (
             <FlexContainer display="display-group">
-                {console.log(this.state.displayFavorites.toString())}
                 <SubContainer display="col-45-w">
                     <FlexContainer display="col-100-w">
                         {this.props.children}
