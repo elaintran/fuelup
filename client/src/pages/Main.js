@@ -124,7 +124,8 @@ class Main extends Component {
         }, () => this.checkResults());
     }
 
-    addFavorites = (station, address, link, logo, index) => {
+    addFavorites = (event, station, address, link, logo, index) => {
+        event.stopPropagation();
         API.favorite({
             station: station,
             address: address,
@@ -135,7 +136,8 @@ class Main extends Component {
         }, this.state.userId).then(response => this.props.checkLogin());
     }
 
-    removeFavorites = id => {
+    removeFavorites = (event, id) => {
+        event.stopPropagation();
         API.unfavorite(this.state.userId, id).then(response => this.props.checkLogin());
     }
 
@@ -153,7 +155,7 @@ class Main extends Component {
                 }
             }
         } else {
-            if (this.state.resultError === "") {
+            if (this.state.resultError === "" || this.state.resultError === undefined) {
                 return (
                     <Segment>
                         <Dimmer active inverted>

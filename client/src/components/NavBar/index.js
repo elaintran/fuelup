@@ -8,6 +8,8 @@ import MenuContainer from "../Container/MenuContainer";
 import MenuButton from "../MenuButton";
 import ButtonContainer from "../Container/ButtonContainer";
 import ErrorMessage from "../ErrorMessage";
+import NavContainer from "../Container/NavContainer";
+import Logo from "../Logo";
 import API from "../../utils/API.js";
 import "./style.sass";
 
@@ -182,8 +184,10 @@ class NavBar extends Component {
     render() {
         return (
             <FlexContainer>
-                <p>Home</p>
-                {this.displayNavItems()}
+                <NavContainer>
+                    <Logo />
+                    {this.displayNavItems()}
+                </NavContainer>
             </FlexContainer>
         );
     }
