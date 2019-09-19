@@ -13,6 +13,9 @@ export default {
     directions: (a, b) => {
         return axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${a};${b}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`);
     },
+    getIP: () => {
+        return axios.get("https://get.geojs.io/v1/ip/geo.json");
+    },
     register: obj => {
         return axios.post("/api/register", obj);
     },

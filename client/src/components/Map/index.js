@@ -8,18 +8,20 @@ const Map = ReactMapboxGl({
 });
 
 const checkCoordinates = (arr, search, price, filterPrice, filter) => {
-    return arr.map((coordinates, index) => {
-        return (
-            <Marker
-                coordinates={[coordinates.longitude, coordinates.latitude]}
-                anchor="bottom"
-                style={{textAlign: "center"}}
-                index={index}>
-                {(filter === false) ? <PriceMarker price={price[index]} /> : <PriceMarker price={filterPrice[index]} />}
-                <i className="fas fa-circle"></i>
-            </Marker>
-        );
-    });
+    if (arr.length !== 0) {
+        return arr.map((coordinates, index) => {
+            return (
+                <Marker
+                    coordinates={[coordinates.longitude, coordinates.latitude]}
+                    anchor="bottom"
+                    style={{textAlign: "center"}}
+                    index={index}>
+                    {(filter === false) ? <PriceMarker price={price[index]} /> : <PriceMarker price={filterPrice[index]} />}
+                    <i className="fas fa-circle"></i>
+                </Marker>
+            );
+        });
+    }
 }
 
 function Mapbox(props) {

@@ -19,7 +19,7 @@ class Favorites extends Component {
             this.searchFavorites(this.props.favorites);
         }
         if (this.props.favorites === undefined) {
-            this.props.checkLogin();
+            this.setState({ results: [] }, () => this.props.checkLogin());
         }
     }
 
@@ -29,24 +29,26 @@ class Favorites extends Component {
 
     //Sends query to the GasBuddy scraper
     searchFavorites = response => {
-        const results = response.map(async results => {
-            const pathname = results.link.split("/").pop();
-            return API.findStation(pathname).then(async response => {
-                return response.data;
-            }).then(response => {
-                results.gasType = response;
-                return results;
+        if (this.state.results.length !== 0 || this.state.results !== undefined) {
+            const results = response.map(async results => {
+                const pathname = results.link.split("/").pop();
+                return API.findStation(pathname).then(async response => {
+                    return response.data;
+                }).then(response => {
+                    results.gasType = response;
+                    return results;
+                });
             });
-        });
-        Promise.all(results).then(response => {
-            const prices = response.map(prices => {
-                return prices.gasType[0].price;
+            Promise.all(results).then(response => {
+                const prices = response.map(prices => {
+                    return prices.gasType[0].price;
+                });
+                this.setState({ 
+                    results: response,
+                    prices: prices
+                }, () => this.checkFavorites());
             });
-            this.setState({ 
-                results: response,
-                prices: prices
-            }, () => this.checkFavorites());
-        });
+        }
     }
 
     checkCity = () => {
@@ -86,6 +88,7 @@ class Favorites extends Component {
                 locationPlaceholder={this.state.locationPlaceholder}
                 margin={{ marginRight: "auto" }}
                 checkFavorites={() => this.checkFavorites()}>
+                {console.log(this.props.favorites)}
                 {/* <Dropdown text={this.state.locationPlaceholder}>
                     <Dropdown.Menu>
                         <Dropdown.Item text="Location" />

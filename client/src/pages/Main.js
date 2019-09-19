@@ -34,6 +34,10 @@ class Main extends Component {
         resultError: this.props.resultError
     }
 
+    componentDidMount() {
+        this.checkFavorites();
+    }
+
     componentDidUpdate(prevProps) {
         if (this.props.results !== prevProps.results) {
             this.setState({
@@ -170,9 +174,9 @@ class Main extends Component {
                     </Segment>
                 );
             } else {
-                // if (this.state.favorites.length !== 0 && this.state.results.length !== 0) {
+                if (this.state.favorites.length !== 0 && this.state.results.length !== 0) {
                     return <NoResultsMessage>{this.state.resultError}</NoResultsMessage>;
-                // }
+                }
             }
         }
     }
@@ -372,6 +376,7 @@ class Main extends Component {
     render() {
         return (
             <FlexContainer display="display-group">
+                {console.log(this.state.displayFavorites.toString())}
                 <SubContainer display="col-45-w">
                     <FlexContainer display="col-100-w">
                         {this.props.children}

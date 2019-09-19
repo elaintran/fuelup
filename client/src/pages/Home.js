@@ -14,8 +14,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        // this.getGeolocation();
-        this.searchGas("78666");
+        this.getGeolocation();
     }
 
     componentDidUpdate(prevProps) {
@@ -39,21 +38,12 @@ class Home extends Component {
     }
 
     getGeolocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.showPosition, err => {
-                console.log(err);
-                this.searchGas("78753");
-            }, {timeout: 10000});
-        } else {
-            this.searchGas("78753");
-        }
-    }
-
-    showPosition = (position) => {
-        API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
+        API.getIP().then(response => {
+            API.geocode(`${response.data.longitude}, ${response.data.latitude}`)
             .then(response => {
                 this.searchGas(response.data.features[2].text);
             });
+        });
     }
 
     //Handles city and zipcode search input
