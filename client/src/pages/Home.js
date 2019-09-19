@@ -11,11 +11,13 @@ class Home extends Component {
         currentCoordinates: "-97.7431,30.2672",
         prices: [],
         userId: this.props.userId,
-        loggedIn: this.props.loggedIn
+        loggedIn: this.props.loggedIn,
+        resultError: ""
     }
 
     componentDidMount() {
-        this.getGeolocation();
+        // this.getGeolocation();
+        this.searchGas("32003");
     }
 
     componentDidUpdate(prevProps) {
@@ -39,22 +41,19 @@ class Home extends Component {
     }
 
     getGeolocation = () => {
+        var timeout = setTimeout(this.searchGas("78753"), 10000);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(this.showPosition, err => {
-                console.log(err);
-                this.searchGas("78753");
-            });
-            // if (navigator.geolocation.getCurrentPosition(this.showPosition) !== undefined) {
-            //     navigator.geolocation.getCurrentPosition(this.showPosition);
-            // } else {
-            //     this.searchGas("78753");                
-            // }
+
+                // clearTimeout(timeout);
+                // this.searchGas("78753");
+            }, {timeout: 10000});
         } else {
-            this.searchGas("78753");
+            // this.searchGas("78753");
         }
     }
 
-    showPosition = position => {
+    showPosition = (position) => {
         API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`)
             .then(response => {
                 this.searchGas(response.data.features[2].text);
@@ -88,6 +87,9 @@ class Home extends Component {
                     results: response.data,
                     prices: prices
                 });
+            }).catch(err => {
+                console.log(err);
+                this.setState({ resultError: "Looks like there has been an error in your request. Please try again." })
             });
     }
 
@@ -100,7 +102,8 @@ class Home extends Component {
                 loggedIn={this.props.loggedIn}
                 favorites={this.state.favorites}
                 checkLogin={() => this.checkLoginStatus()}
-                margin={{ marginLeft: "auto" }}>
+                margin={{ marginLeft: "auto" }}
+                resultError={this.state.resultError}>
                 <SearchBar
                     change={this.handleInput}
                     submit={this.handleSubmit} />

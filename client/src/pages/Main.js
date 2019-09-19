@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Segment, Dimmer, Loader, Image } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
 import FlexContainer from "../components/Container/FlexContainer";
@@ -7,6 +7,7 @@ import SubContainer from "../components/Container/SubContainer";
 import DropdownContainer from "../components/Container/DropdownContainer";
 import ResultsContainer from "../components/Container/ResultsContainer";
 import Button from "../components/Button";
+import NoResultsMessage from "../components/NoResultsMessage";
 import API from "../utils/API.js";
 
 class Main extends Component {
@@ -26,9 +27,11 @@ class Main extends Component {
         },
         zoom: 12,
         resultClicked: "",
+        displayFavorites: false,
         distance: [],
         userId: this.props.userId,
-        loggedIn: this.props.loggedIn
+        loggedIn: this.props.loggedIn,
+        resultError: this.props.resultError
     }
 
     componentDidUpdate(prevProps) {
@@ -46,7 +49,10 @@ class Main extends Component {
             });
         }
         if (this.props.favorites !== prevProps.favorites) {
-            this.setState({ favorites: this.props.favorites });
+            this.setState({ favorites: this.props.favorites }, () => this.checkFavorites());
+        }
+        if (this.props.resultError !== prevProps.resultError) {
+            this.setState({ resultError: this.props.resultError });
         }
     }
 
@@ -79,12 +85,20 @@ class Main extends Component {
                         distance: data
                     });
                 } else {
-                    this.setState({ coordinates: [] })
+                    this.setState({ coordinates: [] });
                 }
             })
         }).catch(err => {
             console.log(err);
         });
+    }
+
+    checkFavorites = () => {
+        if (this.state.favorites.length === 0 && this.state.results.length === 0) {
+            this.setState({
+                displayFavorites: true
+            });
+        }
     }
 
     //Calls the Mapbox Forward Geocode API and converts address into longitude and latitude coordinates
@@ -126,15 +140,31 @@ class Main extends Component {
     }
 
     checkResults = () => {
-        //If no filter is applied
-        if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
-            //Map out all of the returning results onto the page
-            return this.state.results.map((results, index) => this.renderResults(results, index));
-        } else {
-            if (this.state.filterResults.length !== 0) {
-                return this.state.filterResults.map((results, index) => this.renderResults(results, index));
+        if (this.state.results.length !== 0) {
+            //If no filter is applied
+            if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+                //Map out all of the returning results onto the page
+                return this.state.results.map((results, index) => this.renderResults(results, index));
             } else {
-                return <p>No results found.</p>
+                if (this.state.filterResults.length !== 0) {
+                    return this.state.filterResults.map((results, index) => this.renderResults(results, index));
+                } else {
+                    return <NoResultsMessage>No results found.</NoResultsMessage>
+                }
+            }
+        } else {
+            if (this.state.resultError === "") {
+                return (
+                    <Segment>
+                        <Dimmer active inverted>
+                            <Loader inverted>Loading</Loader>
+                        </Dimmer>
+                    </Segment>
+                );
+            } else {
+                if (this.state.favorites.length !== 0 && this.state.results.length !== 0) {
+                    return <NoResultsMessage>{this.state.resultError}</NoResultsMessage>;
+                }
             }
         }
     }
@@ -322,14 +352,13 @@ class Main extends Component {
                 favorite={this.addFavorites}
                 unfavorite={this.removeFavorites}
                 saved={saved}
-                favoriteId={favoriteId}
-            >
+                favoriteId={favoriteId}>
                 {(this.state.resultClicked === index) ? 
                     <Button address={results.address}>
                         Get Directions
                     </Button> : false}
             </Results>
-        );
+        )
     }
 
     render() {
@@ -358,6 +387,7 @@ class Main extends Component {
                         </DropdownContainer>
                     </FlexContainer>
                     <ResultsContainer>
+                        {(this.props.checkFavorites !== undefined && this.state.displayFavorites !== false)? this.props.checkFavorites() : false}
                         {this.checkResults()}
                     </ResultsContainer>
                 </SubContainer>

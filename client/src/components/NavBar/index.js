@@ -88,14 +88,24 @@ class NavBar extends Component {
             signUpOpen: false
         });
     };
-    closeLogin = () => this.setState({ loginOpen: false });
+    closeLogin = () => {
+        this.setState({
+            loginOpen: false,
+            loginErr: false
+        });
+    };
     openSignUp = () => {
         this.setState({
             loginOpen: false,
             signUpOpen: true
         });
     };
-    closeSignUp = () => this.setState({ signUpOpen: false });
+    closeSignUp = () => {
+        this.setState({
+            signUpOpen: false,
+            loginErr: false
+        });
+    };
 
     displayNavItems = () => {
         if (this.state.loggedIn === true) {

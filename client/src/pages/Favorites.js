@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Dropdown } from "semantic-ui-react";
+import NoResultsMessage from "../components/NoResultsMessage";
 import Main from "./Main.js";
 import API from "../utils/API.js";
 
@@ -44,7 +45,7 @@ class Favorites extends Component {
             this.setState({ 
                 results: response,
                 prices: prices
-            });
+            }, () => this.checkFavorites());
         });
     }
 
@@ -66,6 +67,11 @@ class Favorites extends Component {
     // filterLocation = location => {
 
     // }
+    checkFavorites = () => {
+        if (this.state.results.length === 0) {
+            return <NoResultsMessage>No favorites added.</NoResultsMessage>;
+        }
+    }
 
     render() {
         return (
@@ -77,7 +83,8 @@ class Favorites extends Component {
                 loggedIn={this.props.loggedIn}
                 checkLogin={() => this.checkLoginStatus()}
                 locationPlaceholder={this.state.locationPlaceholder}
-                margin={{ marginRight: "auto" }}>
+                margin={{ marginRight: "auto" }}
+                checkFavorites={() => this.checkFavorites()}>
                 {/* <Dropdown text={this.state.locationPlaceholder}>
                     <Dropdown.Menu>
                         <Dropdown.Item text="Location" />
