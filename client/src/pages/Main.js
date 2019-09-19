@@ -101,9 +101,9 @@ class Main extends Component {
 
     checkFavorites = () => {
         if (this.state.favorites.length === 0 && this.state.results.length === 0) {
-            this.setState({
-                displayFavorites: true
-            });
+            setTimeout(() => {
+                this.setState({ displayFavorites: true });
+            }, 10000);
         } else {
             this.setState({
                 displayFavorites: false
@@ -165,7 +165,6 @@ class Main extends Component {
                 }
             }
         } else {
-            console.log(this.state.displayFavorites.toString());
             if (this.state.resultError === "" || this.state.resultError === undefined && this.state.displayFavorites !== true) {
                 return (
                     <Segment>

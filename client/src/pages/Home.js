@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SearchBar from "../components/SearchBar";
 import Main from "./Main.js";
 import API from "../utils/API.js";
+// import axios from "axios";
 
 class Home extends Component {
     state = {
@@ -12,6 +13,9 @@ class Home extends Component {
         loggedIn: this.props.loggedIn,
         resultError: ""
     }
+
+    // CancelToken = axios.CancelToken;
+    // source = CancelToken.source();
 
     componentDidMount() {
         this.getGeolocation();

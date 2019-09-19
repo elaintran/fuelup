@@ -1,5 +1,8 @@
 import axios from "axios";
 
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+
 export default {
     findGas: query => {
         return axios.get(`/api/gasbuddy/${query}`);
