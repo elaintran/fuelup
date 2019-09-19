@@ -46,7 +46,7 @@ class Main extends Component {
                 resultClicked: "",
                 brandPlaceholder: "Brand",
                 fuelPlaceholder: "Fuel Type"
-            }, () => this.convertAddress());
+            }, () => this.convertAddress(), this.checkFavorites());
         }
         if (this.props.loggedIn !== prevProps.loggedIn) {
             this.setState({
@@ -87,7 +87,7 @@ class Main extends Component {
                 if (response.length !== 0) {
                     this.setState({
                         coordinates: response,
-                        center: response[0],
+                        center: response[0]
                         // distance: data
                     });
                 } else {
@@ -165,6 +165,7 @@ class Main extends Component {
                 }
             }
         } else {
+            console.log(this.state.displayFavorites.toString());
             if (this.state.resultError === "" || this.state.resultError === undefined && this.state.displayFavorites !== true) {
                 return (
                     <Segment>
@@ -399,7 +400,7 @@ class Main extends Component {
                         </DropdownContainer>
                     </FlexContainer>
                     <ResultsContainer>
-                        {(this.props.checkFavorites !== undefined && this.state.displayFavorites !== false)? this.props.checkFavorites() : false}
+                        {(this.props.checkFavorites !== undefined && this.state.displayFavorites !== false) ? this.props.checkFavorites() : false}
                         {this.checkResults()}
                     </ResultsContainer>
                 </SubContainer>

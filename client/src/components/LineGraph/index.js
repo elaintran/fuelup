@@ -1,5 +1,6 @@
 import React from "react";
-import { ResponsiveLine } from '@nivo/line';
+import { ResponsiveLine } from "@nivo/line";
+import moment from "moment";
 import "./style.sass";
 
 function LineGraph() {
@@ -8,63 +9,63 @@ function LineGraph() {
             <ResponsiveLine
                 data={[
                     {
-                    "id": "japan",
+                    "id": "$",
                     "color": "hsl(47, 70%, 50%)",
                     "data": [
                         {
-                        "x": "plane",
+                        "x": "January",
                         "y": 15
                         },
                         {
-                        "x": "helicopter",
+                        "x": "February",
                         "y": 206
                         },
                         {
-                        "x": "boat",
+                        "x": "March",
                         "y": 251
                         },
                         {
-                        "x": "train",
+                        "x": "April",
                         "y": 136
                         },
                         {
-                        "x": "subway",
+                        "x": "May",
                         "y": 89
                         },
                         {
-                        "x": "bus",
+                        "x": "June",
                         "y": 271
                         },
                         {
-                        "x": "car",
+                        "x": "July",
                         "y": 52
                         },
                         {
-                        "x": "moto",
-                        "y": 28
+                        "x": "August",
+                        "y": 60
                         },
                         {
-                        "x": "bicycle",
+                        "x": "September",
                         "y": 272
                         },
                         {
-                        "x": "horse",
+                        "x": "October",
                         "y": 294
                         },
                         {
-                        "x": "skateboard",
+                        "x": "November",
                         "y": 31
                         },
                         {
-                        "x": "others",
+                        "x": "December",
                         "y": 239
                         }
                     ]
                     }
                 ]}
-                margin={{ top: 50, right: 20, bottom: 50, left: 60 }}
+                margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
                 xScale={{ type: 'point' }}
-                yScale={{ type: 'linear', stacked: true, min: 0, max: 500 }}
+                yScale={{ type: 'linear', stacked: true, min: 0, max: 400 }}
                 curve="natural"
                 axisTop={null}
                 axisRight={null}
@@ -73,7 +74,7 @@ function LineGraph() {
                     tickSize: 0,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'transportation',
+                    legend: "Yearly Expenses",
                     legendOffset: 36,
                     legendPosition: 'middle'
                 }}
@@ -99,6 +100,7 @@ function LineGraph() {
                 enableArea={true}
                 areaBlendMode="multiply"
                 areaOpacity={0.4}
+                enableSlices="x"
                 useMesh={true}
                 enableCrosshair={false}
             />

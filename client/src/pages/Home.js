@@ -40,9 +40,16 @@ class Home extends Component {
     getGeolocation = () => {
         API.getIP().then(response => {
             API.geocode(`${response.data.longitude}, ${response.data.latitude}`)
-            .then(response => {
-                this.searchGas(response.data.features[2].text);
-            });
+                .then(response => {
+                    if (response.data.features[2].text !== undefined) {
+                        this.searchGas(response.data.features[2].text);
+                    } else {
+                        this.searchGas("78753");
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.searchGas("78753");
+                });
         });
     }
 
@@ -61,6 +68,7 @@ class Home extends Component {
 
     //Sends query to the GasBuddy scraper
     searchGas = query => {
+        this.setState({ results: [] });
         API.findGas(query)
             .then(response => {
                 //Return prices of Regular fuel type to display on map

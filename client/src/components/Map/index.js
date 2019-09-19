@@ -1,5 +1,5 @@
 import React from "react";
-import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Feature, Marker, ZoomControl } from "react-mapbox-gl";
 import PriceMarker from "../PriceMarker";
 import "./style.sass";
 
@@ -43,6 +43,7 @@ function Mapbox(props) {
                     layout={{ "icon-image": "marker-15" }}>
                     <Feature coordinates={[props.center.longitude, props.center.latitude]}/>
                 </Layer>
+                <ZoomControl />
                 {checkCoordinates(props.coordinates, props.search, props.price, props.filterPrice, props.filter)}
             </Map>
         </div>

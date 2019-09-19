@@ -49,7 +49,7 @@ class App extends Component {
                     favorites={this.state.favorites}
                     checkLogin={() => this.loginStatus()} />
                 <Switch>
-                    {/* {(this.state.loggedIn === true) ?
+                    {(this.state.loggedIn === true) ?
                         <Route exact
                             path="/favorites"
                             render={(props) =>
@@ -64,8 +64,7 @@ class App extends Component {
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}
                         favorites={this.state.favorites}
-                        checkLogin={() => this.loginStatus()} />} /> */}
-                    <Route component={Expenses} />
+                        checkLogin={() => this.loginStatus()} />} />
                 </Switch>
             </Router>
         );
