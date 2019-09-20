@@ -6,40 +6,53 @@ import API from "../utils/API.js";
 
 class Favorites extends Component {
     state = {
-        results: [],
-        locationPlaceholder: "Location",
-        city: [],
+        results: "",
         prices: [],
         userId: this.props.userId,
-        loggedIn: this.props.loggedIn
+        loggedIn: this.props.loggedIn,
+        //State properties for potential location dropdown
+        locationPlaceholder: "Location",
+        city: []
     }
 
     componentDidUpdate(prevProps) {
+        //Any updates to favorites in the database should search for database to display new listings
         if (this.props.favorites !== prevProps.favorites) {
             this.searchFavorites(this.props.favorites);
         }
+        //Sometimes favorites come back as undefined instead of 0+ favorites
+        //Makes a request to the database again to update the favorites
         if (this.props.favorites === undefined) {
-            this.setState({ results: [] }, () => this.props.checkLogin());
+            this.setState({ results: "" }, () => this.props.checkLogin());
         }
     }
 
+    //Checks if user is logged in
     checkLoginStatus = () => {
         this.props.checkLogin();
     }
 
     //Sends query to the GasBuddy scraper
     searchFavorites = response => {
+        //If the user has saved favorites
         if (this.state.results.length !== 0 || this.state.results !== undefined) {
+            //Return a new array with gasTypes attached
             const results = response.map(async results => {
+                //Retreive the end path of the link saved
                 const pathname = results.link.split("/").pop();
+                //Search GasBuddy and scrape the fuel prices
                 return API.findStation(pathname).then(async response => {
+                    //Returns an array of gas types and prices
                     return response.data;
                 }).then(response => {
+                    //Create a new property of gasTypes and append the gasTypes
                     results.gasType = response;
                     return results;
                 });
             });
+            //Once all of the async axios requests are complete
             Promise.all(results).then(response => {
+                //Find the regular prices from favorites
                 const prices = response.map(prices => {
                     return prices.gasType[0].price;
                 });
@@ -48,9 +61,12 @@ class Favorites extends Component {
                     prices: prices
                 }, () => this.checkFavorites());
             });
+        } else if (this.state.results.length === 0) {
+            this.checkFavorites();
         }
     }
 
+    //Finding all the cities from results for potential location dropdown
     checkCity = () => {
         if (this.state.results.length !== 0) {
             const city = this.state.results.map(async response => {
@@ -65,10 +81,6 @@ class Favorites extends Component {
             });
         }
     }
-
-    // filterLocation = location => {
-
-    // }
 
     checkFavorites = () => {
         if (this.state.results.length === 0) {
@@ -88,7 +100,6 @@ class Favorites extends Component {
                 locationPlaceholder={this.state.locationPlaceholder}
                 margin={{ marginRight: "auto" }}
                 checkFavorites={() => this.checkFavorites()}>
-                {console.log(this.props.favorites)}
                 {/* <Dropdown text={this.state.locationPlaceholder}>
                     <Dropdown.Menu>
                         <Dropdown.Item text="Location" />

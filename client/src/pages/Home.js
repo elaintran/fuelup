@@ -6,7 +6,8 @@ import API from "../utils/API.js";
 class Home extends Component {
     state = {
         query: "",
-        results: [],
+        results: "",
+        favorites: "",
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
@@ -68,18 +69,22 @@ class Home extends Component {
 
     //Sends query to the GasBuddy scraper
     searchGas = query => {
-        this.setState({ results: [] });
+        this.setState({ results: "" });
         API.findGas(query)
             .then(response => {
-                //Return prices of Regular fuel type to display on map
-                const prices = response.data.map(prices => {
-                    return prices.gasType[0].price
-                });
-                //Retrieves gas station data, and resets Brand and Fuel Type values
-                this.setState({
-                    results: response.data,
-                    prices: prices
-                });
+                if (response.data.length !== 0) {
+                    //Return prices of Regular fuel type to display on map
+                    const prices = response.data.map(prices => {
+                        return prices.gasType[0].price
+                    });
+                    //Retrieves gas station data, and resets Brand and Fuel Type values
+                    this.setState({
+                        results: response.data,
+                        prices: prices
+                    });
+                } else {
+                    this.setState({ results: [] });
+                }
             }).catch(err => {
                 console.log(err);
                 this.setState({ resultError: "Looks like there has been an error in your request. Please try again." })

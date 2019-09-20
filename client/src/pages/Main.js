@@ -28,25 +28,28 @@ class Main extends Component {
         zoom: 12,
         resultClicked: "",
         displayFavorites: false,
-        // distance: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
         resultError: this.props.resultError
     }
 
-    componentDidMount() {
-        this.checkFavorites();
-    }
+    // componentDidMount() {
+    //     this.checkFavorites();
+    // }
 
     componentDidUpdate(prevProps) {
         if (this.props.results !== prevProps.results) {
-            this.setState({
-                results: this.props.results,
-                prices: this.props.prices,
-                resultClicked: "",
-                brandPlaceholder: "Brand",
-                fuelPlaceholder: "Fuel Type"
-            }, () => this.convertAddress(), this.checkFavorites());
+            if (this.props.results !== "") {
+                this.setState({
+                    results: this.props.results,
+                    prices: this.props.prices,
+                    resultClicked: "",
+                    brandPlaceholder: "Brand",
+                    fuelPlaceholder: "Fuel Type"
+                }, () => this.convertAddress(), this.checkFavorites());
+            } else {
+                this.setState({ results: ""});
+            }
         }
         if (this.props.loggedIn !== prevProps.loggedIn) {
             this.setState({
@@ -65,7 +68,7 @@ class Main extends Component {
     //Converts address from the results into longitude and latitude coordinates and adjusts the center of the map to the first result
     convertAddress = () => {
         let coordinates;
-        //If no filter is applied,
+        //If no filter is applied
         if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
             //Convert address of all results into coordinates
             coordinates = this.state.results.map(async address => this.renderLocation(address));
@@ -75,39 +78,32 @@ class Main extends Component {
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
-            // const milesArr = response.map(async coordinates => {
-            //     return API.directions(this.state.currentCoordinates, `${coordinates.longitude},${coordinates.latitude}`).then(response => {
-            //         const meters = response.data.routes[0].distance;
-            //         const miles = (meters * 0.000621371).toFixed(1);
-            //         return miles;
-            //     })
-            // })
-            // Promise.all(milesArr).then(data => {
-                //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
-                if (response.length !== 0) {
-                    this.setState({
-                        coordinates: response,
-                        center: response[0]
-                        // distance: data
-                    });
-                } else {
-                    this.setState({ coordinates: [] });
-                }
-            // })
+            //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
+            if (response.length !== 0) {
+                this.setState({
+                    coordinates: response,
+                    center: response[0]
+                    // distance: data
+                });
+            } else {
+                this.setState({ coordinates: [] });
+            }
         }).catch(err => {
             console.log(err);
         });
     }
 
     checkFavorites = () => {
-        if (this.state.favorites.length === 0 && this.state.results.length === 0) {
-            setTimeout(() => {
-                this.setState({ displayFavorites: true });
-            }, 10000);
+        //If still searching for favorites, don't display error message
+        if (this.state.results === "" && this.state.favorites === "") {
+            this.setState({ displayFavorites: false});
+        }
+        //If no favorites, display message
+        if (this.state.results.length === 0 && this.state.favorites.length === 0) {
+            this.setState({ displayFavorites: true });
+        //If not, don't display message
         } else {
-            this.setState({
-                displayFavorites: false
-            });
+            this.setState({ displayFavorites: false });
         }
     }
 
@@ -152,7 +148,7 @@ class Main extends Component {
     }
 
     checkResults = () => {
-        if (this.state.results.length !== 0) {
+        if (this.state.results.length !== 0 && this.state.results !== "") {
             //If no filter is applied
             if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
                 //Map out all of the returning results onto the page
@@ -164,19 +160,19 @@ class Main extends Component {
                     return <NoResultsMessage>No results found.</NoResultsMessage>
                 }
             }
+        } else if (this.state.results === "") {
+            return (
+                <Segment>
+                    <Dimmer active inverted>
+                        <Loader inverted>Loading</Loader>
+                    </Dimmer>
+                </Segment>
+            );
         } else {
-            if (this.state.resultError === "" || this.state.resultError === undefined && this.state.displayFavorites !== true) {
-                return (
-                    <Segment>
-                        <Dimmer active inverted>
-                            <Loader inverted>Loading</Loader>
-                        </Dimmer>
-                    </Segment>
-                );
+            if (this.state.displayFavorites === false && this.props.checkFavorites() === undefined) {
+                return <NoResultsMessage>No results found.</NoResultsMessage>
             } else {
-                if (this.state.favorites.length !== 0 && this.state.results.length !== 0) {
-                    return <NoResultsMessage>{this.state.resultError}</NoResultsMessage>;
-                }
+                return <NoResultsMessage>No favorites found.</NoResultsMessage>
             }
         }
     }
@@ -184,7 +180,7 @@ class Main extends Component {
     //Display all unique brands in the Brand dropdown
     checkBrand = () => {
         //If search yields returning results
-        if (this.state.results.length !== 0) {
+        if (this.state.results.length !== 0 || this.state.results !== "") {
             //Map out all of the gas stations from the results
             const station = this.state.results.map(station => station.station.trim());
             //Filter out duplicate brands and return unique brands in an object format
@@ -399,7 +395,6 @@ class Main extends Component {
                         </DropdownContainer>
                     </FlexContainer>
                     <ResultsContainer>
-                        {(this.props.checkFavorites !== undefined && this.state.displayFavorites !== false) ? this.props.checkFavorites() : false}
                         {this.checkResults()}
                     </ResultsContainer>
                 </SubContainer>
