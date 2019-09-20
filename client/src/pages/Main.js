@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dropdown, Segment, Dimmer, Loader, Image } from "semantic-ui-react";
+import { Dropdown, Segment, Dimmer, Loader } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
 import FlexContainer from "../components/Container/FlexContainer";

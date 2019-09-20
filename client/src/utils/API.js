@@ -1,16 +1,13 @@
 import axios from "axios";
 
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
-
 export default {
-    findGas: query => {
+    findGas: (query) => {
         return axios.get(`/api/gasbuddy/${query}`);
     },
     findStation: station => {
         return axios.get(`/api/gasbuddy/station/${station}`);
     },
-    geocode: address => {
+    geocode: (address, token) => {
         return axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`);
     },
     directions: (a, b) => {
