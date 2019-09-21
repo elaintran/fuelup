@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dropdown, Segment, Dimmer, Loader } from "semantic-ui-react";
+import { Dropdown, Select, Segment, Dimmer, Loader } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
 import FlexContainer from "../components/Container/FlexContainer";
@@ -30,12 +30,10 @@ class Main extends Component {
         displayFavorites: false,
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
-        resultError: this.props.resultError
+        error: this.props.error
     }
 
-    // componentDidMount() {
-    //     this.checkFavorites();
-    // }
+    _isMounted = false;
 
     componentDidUpdate(prevProps) {
         if (this.props.results !== prevProps.results) {
@@ -60,9 +58,13 @@ class Main extends Component {
         if (this.props.favorites !== prevProps.favorites) {
             this.setState({ favorites: this.props.favorites }, () => this.checkFavorites());
         }
-        if (this.props.resultError !== prevProps.resultError) {
-            this.setState({ resultError: this.props.resultError });
+        if (this.props.error !== prevProps.error) {
+            this.setState({ error: this.props.error });
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     //Converts address from the results into longitude and latitude coordinates and adjusts the center of the map to the first result
@@ -78,12 +80,12 @@ class Main extends Component {
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
+            this._isMounted = true;
             //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
             if (response.length !== 0) {
                 this.setState({
                     coordinates: response,
                     center: response[0]
-                    // distance: data
                 });
             } else {
                 this.setState({ coordinates: [] });
@@ -161,18 +163,23 @@ class Main extends Component {
                 }
             }
         } else if (this.state.results === "") {
-            return (
-                <Segment>
-                    <Dimmer active inverted>
-                        <Loader inverted>Loading</Loader>
-                    </Dimmer>
-                </Segment>
-            );
+            if (this.state.error !== "") {
+                console.log(this.state.error);
+                return <NoResultsMessage>{this.state.error}</NoResultsMessage>
+            } else {
+                return (
+                    <Segment>
+                        <Dimmer active inverted>
+                            <Loader inverted>Loading</Loader>
+                        </Dimmer>
+                    </Segment>
+                );
+            }
         } else {
             if (this.state.displayFavorites === false && this.props.checkFavorites() === undefined) {
                 return <NoResultsMessage>No results found.</NoResultsMessage>
             } else {
-                return <NoResultsMessage>No favorites found.</NoResultsMessage>
+                return <NoResultsMessage>No favorites found.</NoResultsMessage>;
             }
         }
     }

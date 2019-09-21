@@ -12,13 +12,18 @@ class Favorites extends Component {
         loggedIn: this.props.loggedIn,
         //State properties for potential location dropdown
         locationPlaceholder: "Location",
-        city: []
+        city: [],
+        error: ""
     }
 
     componentDidUpdate(prevProps) {
         //Any updates to favorites in the database should search for database to display new listings
         if (this.props.favorites !== prevProps.favorites) {
-            this.searchFavorites(this.props.favorites);
+            if (this.props.favorites.length === 0) {
+                this.setState({city: []}, () => this.searchFavorites(this.props.favorites));
+            } else {
+                this.searchFavorites(this.props.favorites);
+            }
         }
         //Sometimes favorites come back as undefined instead of 0+ favorites
         //Makes a request to the database again to update the favorites
@@ -48,6 +53,9 @@ class Favorites extends Component {
                     //Create a new property of gasTypes and append the gasTypes
                     results.gasType = response;
                     return results;
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({ error: "There has been an error in your request. Please try again later."});
                 });
             });
             //Once all of the async axios requests are complete
@@ -62,29 +70,27 @@ class Favorites extends Component {
                 }, () => this.checkFavorites());
             });
         } else if (this.state.results.length === 0) {
-            this.checkFavorites();
+            this.setState({ results: [] }, () => this.checkFavorites());
         }
     }
 
     //Finding all the cities from results for potential location dropdown
     checkCity = () => {
-        if (this.state.results.length !== 0) {
-            const city = this.state.results.map(async response => {
-                return API.geocode(response.address).then(response => {
-                    return response.data.features[1].text;
-                });
-            });
-            Promise.all(city).then(response => {
-                let citySet = new Set(response);
-                citySet = [...citySet];
-                this.setState({ city: citySet });
-            });
-        }
+        const city = this.state.results.map(response => {
+            let addressArr = response.address.split(",");
+            addressArr = addressArr[addressArr.length - 2].trim();
+            return addressArr;
+        });
+        let citySet = new Set(city);
+        citySet = [...citySet];
+        this.setState({ city: citySet });
     }
 
     checkFavorites = () => {
         if (this.state.results.length === 0) {
             return <NoResultsMessage>No favorites added.</NoResultsMessage>;
+        } else {
+            this.checkCity();
         }
     }
 
@@ -99,13 +105,14 @@ class Favorites extends Component {
                 checkLogin={() => this.checkLoginStatus()}
                 locationPlaceholder={this.state.locationPlaceholder}
                 margin={{ marginRight: "auto" }}
-                checkFavorites={() => this.checkFavorites()}>
-                {/* <Dropdown text={this.state.locationPlaceholder}>
+                checkFavorites={() => this.checkFavorites()}
+                error={this.state.error}>
+                <Dropdown text={this.state.locationPlaceholder}>
                     <Dropdown.Menu>
                         <Dropdown.Item text="Location" />
                         {this.state.city.map((city, index) => <Dropdown.Item text={city} onClick={() => this.filterLocation(city)} key={index} />)}
                     </Dropdown.Menu>
-                </Dropdown> */}
+                </Dropdown>
             </Main>
         );
     }

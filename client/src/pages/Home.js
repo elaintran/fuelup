@@ -11,8 +11,10 @@ class Home extends Component {
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
-        resultError: ""
+        error: ""
     }
+
+    _isMounted = false;
 
     componentDidMount() {
         this.getGeolocation();
@@ -32,6 +34,10 @@ class Home extends Component {
         if (this.props.favorites !== prevProps.favorites) {
             this.setState({ favorites: this.props.favorites });
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     checkLoginStatus = () => {
@@ -69,6 +75,7 @@ class Home extends Component {
 
     //Sends query to the GasBuddy scraper
     searchGas = query => {
+        this._isMounted = true;
         this.setState({ results: "" });
         API.findGas(query)
             .then(response => {
@@ -87,7 +94,7 @@ class Home extends Component {
                 }
             }).catch(err => {
                 console.log(err);
-                this.setState({ resultError: "Looks like there has been an error in your request. Please try again." })
+                this.setState({ error: "There has been an error in your request. Please try again later."});
             });
     }
 
@@ -101,7 +108,7 @@ class Home extends Component {
                 favorites={this.state.favorites}
                 checkLogin={() => this.checkLoginStatus()}
                 margin={{ marginLeft: "auto" }}
-                resultError={this.state.resultError}>
+                error={this.state.error}>
                 <SearchBar
                     change={this.handleInput}
                     submit={this.handleSubmit} />
