@@ -7,6 +7,7 @@ import API from "../utils/API.js";
 class Favorites extends Component {
     state = {
         results: "",
+        station: this.props.station,
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
@@ -16,18 +17,25 @@ class Favorites extends Component {
         error: ""
     }
 
+    componentDidMount() {
+        this.getFavorites(this.state.station);
+    }
+
     componentDidUpdate(prevProps) {
         //Any updates to favorites in the database should search for database to display new listings
-        if (this.props.favorites !== prevProps.favorites) {
-            if (this.props.favorites.length === 0) {
-                this.setState({city: []}, () => this.searchFavorites(this.props.favorites));
+        if (this.props.station !== prevProps.station) {
+            if (this.props.station.length === 0) {
+                this.setState({
+                    station: this.props.station,
+                    city: []
+                }, this.getFavorites(this.state.station));
             } else {
-                this.searchFavorites(this.props.favorites);
+                this.setState({ station: this.props.station }, () => this.getFavorites(this.state.station));
             }
         }
         //Sometimes favorites come back as undefined instead of 0+ favorites
         //Makes a request to the database again to update the favorites
-        if (this.props.favorites === undefined) {
+        if (this.props.station === undefined) {
             this.setState({ results: "" }, () => this.props.checkLogin());
         }
     }
@@ -35,6 +43,15 @@ class Favorites extends Component {
     //Checks if user is logged in
     checkLoginStatus = () => {
         this.props.checkLogin();
+    }
+
+    getFavorites = response => {
+        const getStation = response.map(async station => {
+            return API.getStation(station).then(response => response.data); 
+        });
+        Promise.all(getStation).then(response => {
+            this.searchFavorites(response);
+        }).catch(err => console.log(err));
     }
 
     //Sends query to the GasBuddy scraper
@@ -68,7 +85,7 @@ class Favorites extends Component {
                     results: response,
                     prices: prices
                 }, () => this.checkFavorites());
-            });
+            }).catch(err => console.log(err));
         } else if (this.state.results.length === 0) {
             this.setState({ results: [] }, () => this.checkFavorites());
         }

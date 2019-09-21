@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dropdown, Select, Segment, Dimmer, Loader } from "semantic-ui-react";
+import { Dropdown, Segment, Dimmer, Loader } from "semantic-ui-react";
 import Map from "../components/Map";
 import Results from "../components/Results";
 import FlexContainer from "../components/Container/FlexContainer";
@@ -33,7 +33,9 @@ class Main extends Component {
         error: this.props.error
     }
 
-    _isMounted = false;
+    componentDidMount() {
+        this._isMounted = true;
+    }
 
     componentDidUpdate(prevProps) {
         if (this.props.results !== prevProps.results) {
@@ -80,15 +82,16 @@ class Main extends Component {
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
-            this._isMounted = true;
-            //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
-            if (response.length !== 0) {
-                this.setState({
-                    coordinates: response,
-                    center: response[0]
-                });
-            } else {
-                this.setState({ coordinates: [] });
+            if (this._isMounted) {
+                //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
+                if (response.length !== 0) {
+                    this.setState({
+                        coordinates: response,
+                        center: response[0]
+                    });
+                } else {
+                    this.setState({ coordinates: [] });
+                }
             }
         }).catch(err => {
             console.log(err);
@@ -164,7 +167,6 @@ class Main extends Component {
             }
         } else if (this.state.results === "") {
             if (this.state.error !== "") {
-                console.log(this.state.error);
                 return <NoResultsMessage>{this.state.error}</NoResultsMessage>
             } else {
                 return (

@@ -15,7 +15,7 @@ class App extends Component {
         loggedIn: false
     }
 
-    componentDidMount() {
+    componentDidMount() {   
         this.loginStatus();
     }
 
@@ -24,21 +24,23 @@ class App extends Component {
             this.setState({
                 userId: response.data._id,
                 fullName: response.data.fullName,
-                loggedIn: true
-            }, () => this.getFavorites(response.data.station));
+                loggedIn: true,
+                station: response.data.station
+            });
         }).catch(err => {
+            console.log(err);
             this.setState({ loggedIn: false });
         });
     }
 
-    getFavorites = response => {
-        const getStation = response.map(async station => {
-            return API.getStation(station).then(response => response.data); 
-        });
-        Promise.all(getStation).then(data => {
-            this.setState({ favorites: data });
-        });
-    }
+    // getFavorites = response => {
+    //     const getStation = response.map(async station => {
+    //         return API.getStation(station).then(response => response.data); 
+    //     });
+    //     Promise.all(getStation).then(data => {
+    //         this.setState({ favorites: data });
+    //     }).catch(err => console.log(err));
+    // }
 
     render() {
         return (
@@ -57,13 +59,15 @@ class App extends Component {
                                     userId={this.state.userId}
                                     loggedIn={this.state.loggedIn}
                                     favorites={this.state.favorites}
-                                    checkLogin={() => this.loginStatus()} />}
+                                    checkLogin={() => this.loginStatus()}
+                                    station={this.state.station} />}
                             /> : false }
-                    {this.state.loggedIn === true ? <Route exact path="/expenses" component={Expenses} />: false}
+                    {/* {this.state.loggedIn === true ? <Route exact path="/expenses" component={Expenses} />: false} */}
                     <Route render={(props) => <Home
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}
                         favorites={this.state.favorites}
+                        station={this.state.station}
                         checkLogin={() => this.loginStatus()} />} />
                 </Switch>
             </Router>

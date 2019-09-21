@@ -2,22 +2,23 @@ import React, { Component } from "react";
 import SearchBar from "../components/SearchBar";
 import Main from "./Main.js";
 import API from "../utils/API.js";
+import makeCancelable from "makecancelable";
 
 class Home extends Component {
     state = {
         query: "",
         results: "",
         favorites: "",
+        station: this.props.station,
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
         error: ""
     }
 
-    _isMounted = false;
-
     componentDidMount() {
         this.getGeolocation();
+        this.getFavorites(this.state.station);
     }
 
     componentDidUpdate(prevProps) {
@@ -31,33 +32,41 @@ class Home extends Component {
                 this.setState({ loggedIn: this.props.loggedIn });
             }
         }
-        if (this.props.favorites !== prevProps.favorites) {
-            this.setState({ favorites: this.props.favorites });
+        if (this.props.station !== prevProps.station) {
+            this.setState({ station: this.props.station }, () => this.getFavorites(this.state.station));
         }
     }
 
     componentWillUnmount() {
-        this._isMounted = false;
+        this.cancelRequest();
     }
 
     checkLoginStatus = () => {
         this.props.checkLogin();
     }
 
+    getFavorites = response => {
+        const getStation = response.map(async station => {
+            return API.getStation(station).then(response => response.data); 
+        });
+        Promise.all(getStation).then(data => {
+            this.setState({ favorites: data });
+        }).catch(err => console.log(err));
+    }
+
     getGeolocation = () => {
-        API.getIP().then(response => {
-            API.geocode(`${response.data.longitude}, ${response.data.latitude}`)
-                .then(response => {
+        this.cancelRequest = makeCancelable(
+            API.getIP(),
+            response => makeCancelable(API.geocode(`${response.data.longitude}, ${response.data.latitude}`),
+                response => {
                     if (response.data.features[2].text !== undefined) {
                         this.searchGas(response.data.features[2].text);
                     } else {
                         this.searchGas("78753");
                     }
-                }).catch(err => {
-                    console.log(err);
-                    this.searchGas("78753");
-                });
-        });
+                },
+                console.error),
+            console.error);
     }
 
     //Handles city and zipcode search input
@@ -75,7 +84,6 @@ class Home extends Component {
 
     //Sends query to the GasBuddy scraper
     searchGas = query => {
-        this._isMounted = true;
         this.setState({ results: "" });
         API.findGas(query)
             .then(response => {
