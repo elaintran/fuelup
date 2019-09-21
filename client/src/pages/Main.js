@@ -178,7 +178,9 @@ class Main extends Component {
                 );
             }
         } else {
-            if (this.state.displayFavorites === false && this.props.checkFavorites() === undefined) {
+            if (this.state.displayFavorites === false && this.props.checkFavorites === undefined) {
+                return <NoResultsMessage>No results found.</NoResultsMessage>
+            } else if (this.props.checkFavorites === undefined) {
                 return <NoResultsMessage>No results found.</NoResultsMessage>
             } else {
                 return <NoResultsMessage>No favorites found.</NoResultsMessage>;
