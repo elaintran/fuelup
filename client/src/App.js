@@ -33,15 +33,6 @@ class App extends Component {
         });
     }
 
-    // getFavorites = response => {
-    //     const getStation = response.map(async station => {
-    //         return API.getStation(station).then(response => response.data); 
-    //     });
-    //     Promise.all(getStation).then(data => {
-    //         this.setState({ favorites: data });
-    //     }).catch(err => console.log(err));
-    // }
-
     render() {
         return (
             <Router>
@@ -62,7 +53,7 @@ class App extends Component {
                                     checkLogin={() => this.loginStatus()}
                                     station={this.state.station} />}
                             /> : false }
-                    {/* {this.state.loggedIn === true ? <Route exact path="/expenses" component={Expenses} />: false} */}
+                    {this.state.loggedIn === true ? <Route exact path="/expenses" component={Expenses} />: false}
                     <Route render={(props) => <Home
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}

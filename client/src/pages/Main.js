@@ -17,6 +17,7 @@ class Main extends Component {
         filterResults: [],
         filter: false,
         prices: this.props.prices,
+        locationPlaceholder: "Location",
         brandPlaceholder: "Brand",
         fuelPlaceholder: "Fuel Type",
         coordinates: [],
@@ -25,16 +26,12 @@ class Main extends Component {
             longitude: "-97.7431",
             latitude: "30.2672"
         },
-        zoom: 12,
+        zoom: this.props.zoom,
         resultClicked: "",
         displayFavorites: false,
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
         error: this.props.error
-    }
-
-    componentDidMount() {
-        this._isMounted = true;
     }
 
     componentDidUpdate(prevProps) {
@@ -63,17 +60,16 @@ class Main extends Component {
         if (this.props.error !== prevProps.error) {
             this.setState({ error: this.props.error });
         }
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
+        if (this.props.locationPlaceholder !== prevProps.locationPlaceholder) {
+            this.setState({ locationPlaceholder: this.props.locationPlaceholder }, () => this.filterLocation(this.state.locationPlaceholder));
+        }
     }
 
     //Converts address from the results into longitude and latitude coordinates and adjusts the center of the map to the first result
     convertAddress = () => {
         let coordinates;
         //If no filter is applied
-        if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+        if (this.state.locationPlaceholder === "Location" && this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
             //Convert address of all results into coordinates
             coordinates = this.state.results.map(async address => this.renderLocation(address));
         } else {
@@ -82,16 +78,14 @@ class Main extends Component {
         }
         //Wait for all axios calls to run
         Promise.all(coordinates).then(response => {
-            if (this._isMounted) {
-                //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
-                if (response.length !== 0) {
-                    this.setState({
-                        coordinates: response,
-                        center: response[0]
-                    });
-                } else {
-                    this.setState({ coordinates: [] });
-                }
+            //Then set state of the returned coordinates and adjust the center of the map to the coordinates of the first result
+            if (response.length !== 0) {
+                this.setState({
+                    coordinates: response,
+                    center: response[0]
+                });
+            } else {
+                this.setState({ coordinates: [] });
             }
         }).catch(err => {
             console.log(err);
@@ -155,7 +149,7 @@ class Main extends Component {
     checkResults = () => {
         if (this.state.results.length !== 0 && this.state.results !== "") {
             //If no filter is applied
-            if (this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+            if (this.state.locationPlaceholder === "Location" && this.state.brandPlaceholder === "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
                 //Map out all of the returning results onto the page
                 return this.state.results.map((results, index) => this.renderResults(results, index));
             } else {
@@ -203,23 +197,65 @@ class Main extends Component {
         }
     }
 
+    filterLocation = location => {
+        let filterLocation = [];
+        let filterPrices = [];
+        let filter = false;
+        let zoom = 12;
+        //If only location is selected
+        if (location !== "Location" && this.state.fuelPlaceholder === "Fuel Type" && this.state.brandPlaceholder === "Brand") {
+            filterLocation = this.state.results.filter(station => this.renderLocationFilter(station, this.state.locationPlaceholder));
+        } else if ((location !== "Location" && this.state.fuelPlaceholder !== "Fuel Type") || (location !== "Location" && this.state.brandPlaceholder !== "Brand")) {
+            filterLocation = this.state.filterResults.filter(station => this.renderLocationFilter(station, this.state.locationPlaceholder));
+        } else if (location === "Location" && this.state.fuelPlaceholder !== "Fuel Type" && this.state.brandPlaceholder === "Brand") {
+            filterLocation = this.state.results.filter(station => this.renderFuel(station, this.state.fuelPlaceholder));
+        } else if (location === "Location" && this.state.fuelPlaceholder === "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+            filterLocation = this.state.results.filter(station => this.renderBrand(station, this.state.brandPlaceholder));
+        }
+        if (filterLocation.length !== 0 && this.state.fuelPlaceholder === "Fuel Type") {
+            //Return Regular gas prices to display on map
+            filterPrices = filterLocation.map(prices => {
+                return prices.gasType[0].price;
+            });
+            filter = true;
+        } else if (filterLocation.length !== 0 && this.state.fuelPlaceholder !== "Fuel Type") {
+            //Return prices to display on map depending on the fuel type selected
+            filterPrices = filterLocation.map(prices => {
+                return this.renderPrice(prices, this.state.fuelPlaceholder);
+            });
+            filter = true;
+        }
+        if (location === "Location") {
+            zoom = 9;
+        }
+        this.setState({
+            filterResults: filterLocation,
+            filterPrices: filterPrices,
+            zoom: zoom,
+            filter: filter,
+            resultClicked: ""
+        }, () => this.convertAddress());
+    }
+
     //Function for Fuel Type dropdown items
     filterFuel = fuel => {
         let filterFuel = [];
         let filterPrices = [];
         let filter = false;
         //If a fuel type is selected and a brand is not selected
-        if (fuel !== "Fuel Type" && this.state.brandPlaceholder === "Brand") {
+        if (fuel !== "Fuel Type" && this.state.locationPlaceholder === "Location" && this.state.brandPlaceholder === "Brand") {
             //Filter new results from the original results by fuel type
             filterFuel = this.state.results.filter(station => this.renderFuel(station, fuel));
         //If a fuel type and brand is selected
-        } else if (fuel !== "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+        } else if ((fuel !== "Fuel Type" && this.state.brandPlaceholder !== "Brand") || (fuel !== "Fuel Type" && this.state.locationPlaceholder !== "Location")) {
             //Filter new results from the filtered results by fuel type
             filterFuel = this.state.filterResults.filter(station => this.renderFuel(station, fuel));
         //If a fuel type is not selected and brand is selected
-        } else if (fuel === "Fuel Type" && this.state.brandPlaceholder !== "Brand") {
+        } else if (fuel === "Fuel Type" && this.state.brandPlaceholder !== "Brand" && this.state.locationPlaceholder === "Location") {
             //Filter new results from the original results by brand
             filterFuel = this.state.results.filter(station => this.renderBrand(station, this.state.brandPlaceholder));
+        } else if (fuel === "Fuel Type" && this.state.brandPlaceholder === "Brand" && this.state.locationPlaceholder !== "Location") {
+            filterFuel = this.state.results.filter(station => this.renderLocationFilter(station, this.state.locationPlaceholder));
         }
         //If filter yields results
         if (filterFuel.length !== 0) {
@@ -234,7 +270,7 @@ class Main extends Component {
             filterResults: filterFuel,
             filterPrices: filterPrices,
             fuelPlaceholder: fuel,
-            zoom: 12,
+            zoom: this.props.zoom,
             filter: filter,
             resultClicked: ""
         }, () => this.convertAddress());
@@ -245,18 +281,21 @@ class Main extends Component {
         let filterStation = [];
         let filterPrices = [];
         let filter = false;
+        let zoom = 12;
         //If brand is selected and fuel type is not selected
-        if (brand !== "Brand" && this.state.fuelPlaceholder === "Fuel Type") {
+        if (brand !== "Brand" && this.state.locationPlaceholder === "Location" && this.state.fuelPlaceholder === "Fuel Type") {
             //Filter new results from the original results by brand
             filterStation = this.state.results.filter(station => this.renderBrand(station, brand));
         //If both brand and fuel type are selected
-        } else if (brand !== "Brand" && this.state.fuelPlaceholder !== "Fuel Type") {
+        } else if ((brand !== "Brand" && this.state.fuelPlaceholder !== "Fuel Type") || (brand !== "Brand" && this.state.locationPlaceholder !== "Location")) {
             //Filter new results from the filtered results by brand
             filterStation = this.state.filterResults.filter(station => this.renderBrand(station, brand));
         //If brand is not selected and fuel is selected
-        } else if (brand === "Brand" && this.state.fuelPlaceholder !== "Fuel Type") {
+        } else if (brand === "Brand" && this.state.fuelPlaceholder !== "Fuel Type" && this.state.locationPlaceholder === "Location") {
             //Filter new results from the original results by fuel type
             filterStation = this.state.results.filter(station => this.renderFuel(station, this.state.fuelPlaceholder));
+        } else if (brand === "Brand" && this.state.fuelPlaceholder === "Fuel Type" && this.state.locationPlaceholder !== "Location") {
+            filterStation = this.state.results.filter(station => this.renderLocationFilter(station, this.state.locationPlaceholder));
         }
         //If filter yields results and fuel type is not selected
         if (filterStation.length !== 0 && this.state.fuelPlaceholder === "Fuel Type") {
@@ -277,7 +316,7 @@ class Main extends Component {
             filterResults: filterStation,
             filterPrices: filterPrices,
             brandPlaceholder: brand,
-            zoom: 12,
+            zoom: this.props.zoom,
             filter: filter,
             resultClicked: ""
         }, () => this.convertAddress());
@@ -302,6 +341,14 @@ class Main extends Component {
                     return (a.gasType[0].price > b.gasType[0].price) ? 1 : -1;
             }
         });
+    }
+
+    renderLocationFilter = (station, location) => {
+        let addressArr = station.address.split(",");
+        addressArr = addressArr[addressArr.length - 2].trim();
+        if (addressArr === location) {
+            return station;
+        }
     }
 
     //Checks if station has the fuel type selected

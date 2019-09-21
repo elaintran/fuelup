@@ -111,6 +111,11 @@ class Favorites extends Component {
         }
     }
 
+    //Function for Brand dropdown items
+    locationDropdown = location => {
+        this.setState({ locationPlaceholder: location });
+    }
+
     render() {
         return (
             <Main
@@ -123,11 +128,12 @@ class Favorites extends Component {
                 locationPlaceholder={this.state.locationPlaceholder}
                 margin={{ marginRight: "auto" }}
                 checkFavorites={() => this.checkFavorites()}
-                error={this.state.error}>
+                error={this.state.error}
+                zoom={9}>
                 <Dropdown text={this.state.locationPlaceholder}>
                     <Dropdown.Menu>
-                        <Dropdown.Item text="Location" />
-                        {this.state.city.map((city, index) => <Dropdown.Item text={city} onClick={() => this.filterLocation(city)} key={index} />)}
+                        <Dropdown.Item text="Location" onClick={() => this.locationDropdown("Location")} />
+                        {this.state.city.map((city, index) => <Dropdown.Item text={city} onClick={() => this.locationDropdown(city)} key={index} />)}
                     </Dropdown.Menu>
                 </Dropdown>
             </Main>

@@ -6,6 +6,7 @@ import "./style.sass";
 function LineGraph() {
     return (
         <div className="graph-container">
+            <p>Yearly Expenses</p>
             <ResponsiveLine
                 data={[
                     {
@@ -13,19 +14,19 @@ function LineGraph() {
                     "color": "hsl(47, 70%, 50%)",
                     "data": [
                         {
-                        "x": "January",
+                        "x": "Jan",
                         "y": 15
                         },
                         {
-                        "x": "February",
+                        "x": "Feb",
                         "y": 206
                         },
                         {
-                        "x": "March",
+                        "x": "Mar",
                         "y": 251
                         },
                         {
-                        "x": "April",
+                        "x": "Apr",
                         "y": 136
                         },
                         {
@@ -33,60 +34,42 @@ function LineGraph() {
                         "y": 89
                         },
                         {
-                        "x": "June",
+                        "x": "Jun",
                         "y": 271
                         },
                         {
-                        "x": "July",
+                        "x": "Jul",
                         "y": 52
                         },
                         {
-                        "x": "August",
+                        "x": "Aug",
                         "y": 60
                         },
                         {
-                        "x": "September",
+                        "x": "Sept",
                         "y": 272
                         },
                         {
-                        "x": "October",
+                        "x": "Oct",
                         "y": 294
                         },
                         {
-                        "x": "November",
+                        "x": "Nov",
                         "y": 31
                         },
                         {
-                        "x": "December",
+                        "x": "Dec",
                         "y": 239
                         }
                     ]
                     }
                 ]}
-                margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
+                margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
                 xScale={{ type: 'point' }}
-                yScale={{ type: 'linear', stacked: true, min: 0, max: 400 }}
+                yScale={{ type: 'linear', stacked: true, min: 0, max: 350 }}
                 curve="natural"
                 axisTop={null}
                 axisRight={null}
-                axisBottom={{
-                    orient: 'bottom',
-                    tickSize: 0,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legend: "Yearly Expenses",
-                    legendOffset: 36,
-                    legendPosition: 'middle'
-                }}
-                axisLeft={{
-                    orient: 'left',
-                    tickSize: 0,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legend: 'Amount Spent',
-                    legendOffset: -40,
-                    legendPosition: 'middle'
-                }}
                 colors={["#5c99ff"]}
                 lineWidth={3}
                 enablePoints={false}

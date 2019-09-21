@@ -116,7 +116,8 @@ class Home extends Component {
                 favorites={this.state.favorites}
                 checkLogin={() => this.checkLoginStatus()}
                 margin={{ marginLeft: "auto" }}
-                error={this.state.error}>
+                error={this.state.error}
+                zoom={12}>
                 <SearchBar
                     change={this.handleInput}
                     submit={this.handleSubmit} />
