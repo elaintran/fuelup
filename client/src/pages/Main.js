@@ -31,7 +31,13 @@ class Main extends Component {
         displayFavorites: false,
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
-        error: this.props.error
+        error: this.props.error,
+        mapHeight: "calc(100vh - 85px)"
+    }
+
+    componentDidMount() {
+        this.checkResize();
+        window.addEventListener("resize", this.checkResize.bind(this));
     }
 
     componentDidUpdate(prevProps) {
@@ -63,6 +69,10 @@ class Main extends Component {
         if (this.props.locationPlaceholder !== prevProps.locationPlaceholder) {
             this.setState({ locationPlaceholder: this.props.locationPlaceholder }, () => this.filterLocation(this.state.locationPlaceholder));
         }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.checkResize.bind(this));
     }
 
     //Converts address from the results into longitude and latitude coordinates and adjusts the center of the map to the first result
@@ -324,22 +334,24 @@ class Main extends Component {
 
     sortPrice = (results, fuel) => {
         return results.sort((a, b) => {
+            let sort = "";
             switch(fuel) {
                 case "Midgrade":
-                    return (a.gasType[1].price > b.gasType[1].price) ? 1 : -1;
+                    sort = (a.gasType[1].price > b.gasType[1].price) ? 1 : -1;
                     break;
                 case "Premium":
-                    return (a.gasType[2].price > b.gasType[2].price) ? 1 : -1;
+                    sort = (a.gasType[2].price > b.gasType[2].price) ? 1 : -1;
                     break;
                 case "Diesel":
-                    return (a.gasType[3].price > b.gasType[3].price) ? 1 : -1;
+                    sort = (a.gasType[3].price > b.gasType[3].price) ? 1 : -1;
                     break;
                 case "UNL88":
-                    return (a.gasType[4].price > b.gasType[4].price) ? 1 : -1;
+                    sort = (a.gasType[4].price > b.gasType[4].price) ? 1 : -1;
                     break;
                 default:
-                    return (a.gasType[0].price > b.gasType[0].price) ? 1 : -1;
+                    sort = (a.gasType[0].price > b.gasType[0].price) ? 1 : -1;
             }
+            return sort;
         });
     }
 
@@ -427,6 +439,14 @@ class Main extends Component {
         )
     }
 
+    checkResize = () => {
+        if (window.innerWidth > 985) {
+            this.setState({ mapHeight: "calc(100vh - 85px)" });
+        } else {
+            this.setState({ mapHeight: "70vh" });
+        }
+    }
+
     render() {
         return (
             <FlexContainer display="display-group">
@@ -463,7 +483,8 @@ class Main extends Component {
                         price={this.state.prices}
                         filterPrice={this.state.filterPrices}
                         zoom={this.state.zoom}
-                        filter={this.state.filter} />
+                        filter={this.state.filter}
+                        height={this.state.mapHeight} />
                 </SubContainer>
             </FlexContainer>
         );

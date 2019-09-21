@@ -44,3 +44,23 @@ a
 
 .results-container .ui.dimmer, .results-container .ui.inverted.dimmer
     background: transparent
+
+@media (max-width: 985px)
+    .ui.dropdown
+        &:first-child
+            margin-right: 0
+
+    .filter .ui.dropdown
+        &:first-child
+            margin-left: 15px
+            margin-right: 15px
+
+@media (max-width: 405px)
+    .filter .ui.dropdown
+        &:first-child
+            margin-left: 10px
+            margin-right: 10px
+
+    .ui.dropdown
+        &:last-child
+            margin-right: 0
