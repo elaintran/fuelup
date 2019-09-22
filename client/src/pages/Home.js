@@ -36,10 +36,6 @@ class Home extends Component {
         }
     }
 
-    // componentWillUnmount() {
-    //     this.cancelRequest();
-    // }
-
     checkLoginStatus = () => {
         this.props.checkLogin();
     }

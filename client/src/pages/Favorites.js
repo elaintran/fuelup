@@ -11,7 +11,6 @@ class Favorites extends Component {
         prices: [],
         userId: this.props.userId,
         loggedIn: this.props.loggedIn,
-        //State properties for potential location dropdown
         locationPlaceholder: "Location",
         city: [],
         error: ""

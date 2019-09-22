@@ -422,7 +422,6 @@ class Main extends Component {
                 address={results.address}
                 gasType={results.gasType}
                 link={results.link}
-                // distance={this.state.distance[index]}
                 id={index}
                 key={index}
                 click={this.handleCenter}

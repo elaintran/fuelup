@@ -10,7 +10,6 @@ class App extends Component {
         userId: "",
         fullName: "",
         station: [],
-        favorites: [],
         loggedIn: false
     }
 
@@ -38,7 +37,6 @@ class App extends Component {
                 <NavBar
                     fullName={this.state.fullName}
                     loggedIn={this.state.loggedIn}
-                    favorites={this.state.favorites}
                     checkLogin={() => this.loginStatus()} />
                 <Switch>
                     {(this.state.loggedIn === true) ?
@@ -48,14 +46,12 @@ class App extends Component {
                                 <Favorites
                                     userId={this.state.userId}
                                     loggedIn={this.state.loggedIn}
-                                    favorites={this.state.favorites}
                                     checkLogin={() => this.loginStatus()}
                                     station={this.state.station} />}
                             /> : false }
                     <Route render={(props) => <Home
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}
-                        favorites={this.state.favorites}
                         station={this.state.station}
                         checkLogin={() => this.loginStatus()} />} />
                 </Switch>
