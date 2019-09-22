@@ -51,7 +51,7 @@ class Home extends Component {
 
     getGeolocation = () => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.showPosition);
+            navigator.geolocation.getCurrentPosition(this.showPosition, err => this.searchGas("78753"));
         } else {
             this.searchGas("78753");
         }
