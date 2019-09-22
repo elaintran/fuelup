@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import SearchBar from "../components/SearchBar";
 import Main from "./Main.js";
 import API from "../utils/API.js";
-import makeCancelable from "makecancelable";
 
 class Home extends Component {
     state = {
@@ -37,9 +36,9 @@ class Home extends Component {
         }
     }
 
-    componentWillUnmount() {
-        this.cancelRequest();
-    }
+    // componentWillUnmount() {
+    //     this.cancelRequest();
+    // }
 
     checkLoginStatus = () => {
         this.props.checkLogin();
@@ -55,18 +54,23 @@ class Home extends Component {
     }
 
     getGeolocation = () => {
-        this.cancelRequest = makeCancelable(
-            API.getIP(),
-            response => makeCancelable(API.geocode(`${response.data.longitude}, ${response.data.latitude}`),
-                response => {
-                    if (response.data.features[2].text !== undefined) {
-                        this.searchGas(response.data.features[2].text);
-                    } else {
-                        this.searchGas("78753");
-                    }
-                },
-                console.error),
-            console.error);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.showPosition);
+        } else {
+            this.searchGas("78753");
+        }
+    }
+
+    showPosition = position => {
+        API.geocode(`${position.coords.longitude}, ${position.coords.latitude}`).then(response => {
+            if (response.data.features[2].text !== undefined) {
+                this.searchGas(response.data.features[2].text);
+            } else {
+                this.searchGas("78753");
+            }
+        }).catch(err => {
+            this.searchGas("78753");
+        });
     }
 
     //Handles city and zipcode search input

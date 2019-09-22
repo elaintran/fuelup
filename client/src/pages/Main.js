@@ -440,7 +440,7 @@ class Main extends Component {
     }
 
     checkResize = () => {
-        if (window.innerWidth > 985) {
+        if (window.matchMedia("(min-width: 975px)").matches) {
             this.setState({ mapHeight: "calc(94vh - 85px)" });
         } else {
             this.setState({ mapHeight: "64vh" });
