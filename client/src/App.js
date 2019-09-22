@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home.js";
 import Favorites from "./pages/Favorites.js";
-import Expenses from "./pages/Expenses.js";
 import NavBar from "./components/NavBar";
 import API from "./utils/API.js";
 
@@ -53,7 +52,6 @@ class App extends Component {
                                     checkLogin={() => this.loginStatus()}
                                     station={this.state.station} />}
                             /> : false }
-                    {this.state.loggedIn === true ? <Route exact path="/expenses" component={Expenses} />: false}
                     <Route render={(props) => <Home
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}
