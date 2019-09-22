@@ -1,10 +1,14 @@
 $off-white: #f6f8fd
-$charcoal: #232323
+$charcoal: #2f2f2f
 $lightgray: #e9e9e9
+$gray: #80848e
 
 body
     font-family: "Open Sans", sans-serif
     background-color: $off-white
+    color: $charcoal
+
+p, h4
     color: $charcoal
 
 a
@@ -44,6 +48,9 @@ a
 
 .results-container .ui.dimmer, .results-container .ui.inverted.dimmer
     background: transparent
+
+.ui.dropdown>.dropdown.icon
+    color: $gray
 
 @media (max-width: 985px)
     .ui.dropdown

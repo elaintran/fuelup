@@ -4,7 +4,12 @@ import "./style.sass";
 
 function Logo() {
     return (
-        <Link to="/"><div className="logo">fuelup.</div></Link>
+        <Link to="/">
+            <div className="logo-container">
+                <img src={require("../../images/fuelup-logo.png")} alt="fuelup-logo" className="logo-image" />
+                <div className="logo">fuelup.</div>
+            </div>
+        </Link>
     );
 }
 
