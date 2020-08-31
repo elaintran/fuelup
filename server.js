@@ -20,7 +20,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // connect to mongo database
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fuelupdb");
+mongoose.connect(process.env.DB_URI || "mongodb://localhost/fuelupdb");
 
 //uses the route information on "routes/index.js"
 app.use(routes);
