@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
-const jsdom = require("jsdom");
 const userController = require("../../controllers/userController.js");
 const stationController = require("../../controllers/stationController.js");
 const passport = require("../../config/passport.js");
