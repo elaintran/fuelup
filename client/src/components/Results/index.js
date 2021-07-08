@@ -8,7 +8,6 @@ function Results(props) {
             <div className="result-container">
                 <div className="result-info">
                     <img className="logo" src={props.logo} alt={props.station} />
-                    {console.log(props.logo)}
                     <div className="gas-info">
                         <h4>{props.station}</h4>
                         <div className="location">
