@@ -12,7 +12,7 @@ module.exports = {
         });
     },
     authenticate: (req, res) => {
-        console.log(req.body);
+        // console.log(req.body);
         res.json(req.body);
     }
 }
