@@ -19,6 +19,7 @@ class App extends Component {
 
     loginStatus = () => {
         API.checkUser().then(response => {
+            console.log(response.data.station);
             this.setState({
                 userId: response.data._id,
                 fullName: response.data.fullName,
@@ -42,14 +43,14 @@ class App extends Component {
                     {(this.state.loggedIn === true) ?
                         <Route exact
                             path="/favorites"
-                            render={(props) =>
+                            render={() =>
                                 <Favorites
                                     userId={this.state.userId}
                                     loggedIn={this.state.loggedIn}
                                     checkLogin={() => this.loginStatus()}
                                     station={this.state.station} />}
                             /> : false }
-                    <Route render={(props) => <Home
+                    <Route render={() => <Home
                         userId={this.state.userId}
                         loggedIn={this.state.loggedIn}
                         station={this.state.station}

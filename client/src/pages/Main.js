@@ -409,9 +409,6 @@ class Main extends Component {
         let favoriteId = "";
         if (this.state.favorites.length !== 0) {
             this.state.favorites.map(favorites => {
-                console.log(`favorite: ${favorites.address}`);
-                console.log(`results: ${results.address}`);
-                console.log("----------");
                 if (favorites.address === results.address) {
                     saved = true;
                     favoriteId = favorites._id;

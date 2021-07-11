@@ -21,7 +21,6 @@ class Favorites extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log(this.props.station);
         //Any updates to favorites in the database should search for database to display new listings
         if (this.props.station !== prevProps.station) {
             if (this.props.station.length === 0) {
@@ -56,7 +55,6 @@ class Favorites extends Component {
 
     //Sends query to the GasBuddy scraper
     searchFavorites = response => {
-        console.log(response);
         //If the user has saved favorites
         if (this.state.results.length !== 0 || this.state.results !== undefined) {
             //Return a new array with gasTypes attached

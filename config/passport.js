@@ -21,6 +21,12 @@ passport.use(new LocalStrategy({usernameField: "email", passwordField: "password
 }))
 
 passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+// passport.deserializeUser((user, done) => done(null, user));
+
+passport.deserializeUser((user, done) => {
+    db.User.findById(user._id, (err, user) => {
+        done(err, user);
+    })
+})
 
 module.exports = passport;

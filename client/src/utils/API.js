@@ -1,13 +1,13 @@
 import axios from "axios";
 
 export default {
-    findGas: (query) => {
+    findGas: query => {
         return axios.get(`/api/gasbuddy/${query}`);
     },
     findStation: station => {
         return axios.get(`/api/gasbuddy/station/${station}`);
     },
-    geocode: (address, token) => {
+    geocode: address => {
         return axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`);
     },
     directions: (a, b) => {
@@ -29,6 +29,7 @@ export default {
         return axios.get("/api/user");
     },
     favorite: (station, id) => {
+        console.log(station);
         return axios.post(`/api/user/${id}`, station);
     },
     unfavorite: (id, stationId) => {

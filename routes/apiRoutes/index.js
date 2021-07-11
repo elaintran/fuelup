@@ -56,11 +56,11 @@ router.get("/gasbuddy/station/:id", (req, res) => {
     axios.get(`https://www.gasbuddy.com/station/${req.params.id}`).then(response => {
         const $ = cheerio.load(response.data);
         const gasArr = [];
-        $(".GasPriceCollection__fuelTypePriceSection___3iGR-").each((i, element) => {
+        $(".GasPriceCollection-module__fuelTypePriceSection___3iGR-").each((i, element) => {
             const gasType = {};
             gasType.type = $(element).children("span").text();
-            gasType.price = $(element).children(".GasPriceCollection__priceDisplay___1pnaL").children(".FuelTypePriceDisplay__displayContainer___3vnwR:first-child").children("span").text();
-            gasType.lastUpdated = $(element).children(".GasPriceCollection__priceDisplay___1pnaL").children(".FuelTypePriceDisplay__displayContainer___3vnwR:first-child").children(".FuelTypePriceDisplay__reportedBy___1yi7m").children("p").text();
+            gasType.price = $(element).children("div").children("div").children("span").eq(0).text();
+            gasType.lastUpdated = $(element).children("div").children("div").children("div").eq(0).children("p").text();
             gasArr.push(gasType);
         });
         return gasArr;
@@ -91,13 +91,13 @@ router.get("/logout", (req, res) => {
 });
 
 router.route("/user/:id")
-    .post(stationController.create)
+    .post(stationController.create);
 
 router.route("/user/:id/station/:stationId")
-    .delete(stationController.remove)
+    .delete(stationController.remove);
 
 router.route("/station/:id")
-    .get(stationController.findOne)
+    .get(stationController.findOne);
 
 
 module.exports = router;
