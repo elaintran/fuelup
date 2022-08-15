@@ -16,7 +16,11 @@ router.get("/gasbuddy/:id", (req, res) => {
                 const result = {};
                 result.station = $(element).children("div:nth-child(2)").children("h3").text().trim();
                 result.logo = "https://images.gasbuddy.io/33xauto/b/0.png";
-                // result.logo = $(element).children("div:nth-child(1)").children("div:nth-child(1)").children("div:nth-child(1)").children("img").attr("src");
+                // if ($(element).children("div:nth-child(1)").children("div").children("div").children("img").attr("src") === undefined) {
+                //     result.logo = $(element).children("div:nth-child(1)").children("div").children("div").children("div").children("img").attr("src");
+                // } else {
+                //     result.logo = $(element).children("div:nth-child(1)").children("div").children("div").children("img").attr("src");
+                // }
                 if ($(".GenericStationListItem-module__stationListItem___3Jmn4").eq(i).children("div:nth-child(1)").children("div:nth-child(1)").children().length === 1) {
                     result.address = $(element).children("div:nth-child(2)").children("div:nth-child(3)").html().replace("<br/>", ", ");
                     result.link = `https://www.gasbuddy.com${$(element).children("div:nth-child(2)").children("h3").children("a").attr("href")}`;
@@ -33,14 +37,17 @@ router.get("/gasbuddy/:id", (req, res) => {
                 return axios.get(element.link).then(response => {
                     const $ = cheerio.load(response.data);
                     const gasArr = [];
-                    $(".GasPriceCollection-module__fuelTypePriceSection___3iGR-").each((i, element) => {
+                    $('[class*="collectionContainer"]').children("div:nth-child(1)").children("div").each((i, element) => {
                         const gasType = {};
                         gasType.type = $(element).children("span").text();
-                        gasType.price = $(element).children("div").children("div").children("span").eq(0).text();
-                        gasType.lastUpdated = $(element).children("div").children("div").children("div").eq(0).children("p").text();
                         gasArr.push(gasType);
                     });
+                    $('[class*="collectionContainer"]').children("div:nth-child(2)").children("div").each((i, element) => {
+                        gasArr[i].price = $(element).children("span").text();
+                        gasArr[i].lastUpdated = $(element).children("div").children("p").text();
+                    });
                     element.gasType = gasArr;
+                    console.log(element);
                     return element;
                 });
             });
@@ -56,12 +63,14 @@ router.get("/gasbuddy/station/:id", (req, res) => {
     axios.get(`https://www.gasbuddy.com/station/${req.params.id}`).then(response => {
         const $ = cheerio.load(response.data);
         const gasArr = [];
-        $(".GasPriceCollection-module__fuelTypePriceSection___3iGR-").each((i, element) => {
+        $('[class*="collectionContainer"]').children("div:nth-child(1)").children("div").each((i, element) => {
             const gasType = {};
             gasType.type = $(element).children("span").text();
-            gasType.price = $(element).children("div").children("div").children("span").eq(0).text();
-            gasType.lastUpdated = $(element).children("div").children("div").children("div").eq(0).children("p").text();
             gasArr.push(gasType);
+        });
+        $('[class*="collectionContainer"]').children("div:nth-child(2)").children("div").each((i, element) => {
+            gasArr[i].price = $(element).children("span").text();
+            gasArr[i].lastUpdated = $(element).children("div").children("p").text();
         });
         return gasArr;
     }).then(response => {
