@@ -15,4 +15,5 @@ services:
         value: /fuelup/build/static/js/*.js
       - key: MONGODB_URI # Imported from Heroku app
         value: mongodb+srv://heroku_vm0g4bw5:u0rm57kfhu4bt3e3gtcad63fb8@cluster-vm0g4bw5.ucq76.mongodb.net/heroku_vm0g4bw5?retryWrites&#x3D;true&amp;w&#x3D;majority
-
+      - key: REACT_APP_MAPBOX_TOKEN
+        value: pk.eyJ1IjoiZWxhaW50cmFuIiwiYSI6ImNrMGlneDNxMjBkNTczb3A3ODZna2UycXcifQ.nT4CwX6iU7aNKIdiCBhheg
