@@ -4,7 +4,7 @@ import PriceMarker from "../PriceMarker";
 import "./style.sass";
 
 const Map = ReactMapboxGl({
-    accessToken: process.env.REACT_APP_MAPBOX_TOKEN
+    mapboxAccessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
 
 const checkCoordinates = (arr, search, price, filterPrice, filter) => {
