@@ -9,7 +9,7 @@ When it comes to searching for fuel prices, there are few sources where you can 
 * Potentially add a new page to monitor your yearly gas expenses
 
 ## Demo
-[View Demo Here](https://fuelup.herokuapp.com/)
+[View Demo Here](https://fuelup-648e.onrender.com/)
 
 ## Technologies Used
 * [React](https://reactjs.org/)
