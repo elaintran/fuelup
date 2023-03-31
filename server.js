@@ -1,5 +1,6 @@
 const express = require("express");
-const session = require("express-session");
+//const session = require("express-session");
+var session = require('cookie-session');
 const mongoose = require("mongoose");
 const app = express();
 const routes = require("./routes");
