@@ -28,6 +28,7 @@ router.get("/gasbuddy/:id", (req, res) => {
                     result.address = $(element).children("div:nth-child(2)").children("div:nth-child(4)").html().replace("<br/>", ", ");
                     result.link = `https://www.gasbuddy.com${$(element).children("div:nth-child(2)").children("h3").children("span").children("a").attr("href")}`;
                 }
+                console.log(result.station);
                 resultArr.push(result);
             });
             console.log(resultArr);
